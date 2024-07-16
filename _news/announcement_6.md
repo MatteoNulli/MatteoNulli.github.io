@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Today I started working at eBay at the NLP Lab at the Amsterdam offices. The internship will focus on multimodal research and developpment for data, architecture and pre-training. ![alt text](image.png)
+Today I started working at eBay joining the NLP Lab in the Amsterdam office. The internship will focus on multimodal research and developpment for data, architecture and pre-training. Excited to start! 

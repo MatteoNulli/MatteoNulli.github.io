@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Applied Scientist @ eBay & Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
+subtitle: Applied Scientist @ <a href='https://www.ebay.com'>eBay</a>, Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
 
 profile:
   align: right
@@ -22,7 +22,7 @@ social: true # includes social icons at the bottom of the page
 💭 My research interests lie in bridging the gap between Vision and Language within AI systems. Multimodal models are capable of merging two of the most important aspects of how us humans learn and interact with the world around us. I strive to align the performance of Multimodal foundation models to that of LLMs. 
 <!-- I am also interested in Reinforcement Learning applied to robotics.  -->
 
-📚 Currently I am taking the [Foundation Models](https://uvafomo.github.io) and [Deep Learning 2](https://uvadl2c.github.io) courses. 
+📚 Currently I am working as Applied Scientist on Multimodal Learning at eBay. 
 
 Always open to hear about possible research collaborations, feel free to reach out.
 
