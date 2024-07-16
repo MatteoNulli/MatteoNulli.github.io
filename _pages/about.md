@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
+subtitle: Applied Scientist @ eBay & Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
 
 profile:
   align: right
@@ -17,7 +17,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-📌 Hi, this is Matteo, a first year MSc student in [Artificial Intelligence](https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html) at the University of Amsterdam. Previously, I graduated from [Bocconi University](https://www.unibocconi.it/en) with Bachelor's of Science in [Mathematical and Computing Sciences for AI](https://www.unibocconi.eu/wps/wcm/connect/bocconi/sitopubblico_en/navigation+tree/home/programs/bachelor+of+science/mathematical+and+computing+sciences+for+artificial+intelligence/mathematical+and+computing+sciences+for+artificial+intelligence/). During this time, I was selected to participate in an exchange program at the [University of Sydney](https://www.sydney.edu.au) with a full scholarship. Here, I took courses in Applied Mathematics and Computer Science.   
+📌 Hi, this is Matteo, a first year MSc student in [Artificial Intelligence](https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html) at the University of Amsterdam and a Applied Scientist Working Student in the NLP Lab at eBay. Previously, I graduated from [Bocconi University](https://www.unibocconi.it/en) with Bachelor's of Science in [Mathematical and Computing Sciences for AI](https://www.unibocconi.eu/wps/wcm/connect/bocconi/sitopubblico_en/navigation+tree/home/programs/bachelor+of+science/mathematical+and+computing+sciences+for+artificial+intelligence/mathematical+and+computing+sciences+for+artificial+intelligence/). During this time, I was selected to participate in an exchange program at the [University of Sydney](https://www.sydney.edu.au) with a full scholarship. Here, I took courses in Applied Mathematics and Computer Science.   
 
 💭 My research interests lie in bridging the gap between Vision and Language within AI systems. Multimodal models are capable of merging two of the most important aspects of how us humans learn and interact with the world around us. I strive to align the performance of Multimodal foundation models to that of LLMs. 
 <!-- I am also interested in Reinforcement Learning applied to robotics.  -->
