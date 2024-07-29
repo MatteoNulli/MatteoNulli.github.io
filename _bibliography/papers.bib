@@ -1,9 +1,9 @@
 
-@inproceedings{nulli2024incontextlearningimprovescompositional,
+@inproceedings{nulli2024context,
+title={In-Context Learning Improves Compositional Understanding of Vision-Language Models},
+author={Nulli, Matteo and Ibrahimi, Anesa and Pal, Avik and Lee, Hoshe and Najdenkoska, Ivona},
 bibtex_show={true},
 abbr={ICML FMW},
-title={In-Context Learning Improves Compositional Understanding of Vision-Language Models},
-author={Matteo Nulli and Anesa Ibrahimi and Avik Pal and Hoshe Lee and Ivona Najdenkoska},
 booktitle={ICML 2024 Workshop on Foundation Models in the Wild},
 year={2024},
 eprint={2407.15487},
@@ -13,8 +13,10 @@ url={https://arxiv.org/abs/2407.15487},
 html={https://arxiv.org/abs/2407.15487}, 
 selected={true},
 preview={vlm_comp.png},
-pdf={https://arxiv.org/pdf/2407.15487}
+pdf={https://arxiv.org/pdf/2407.15487},
+absract={Vision-Language Models (VLMs) have shown remarkable capabilities in a large number of downstream tasks. Nonetheless, compositional image understanding remains a rather difficult task due to the object bias present in training data. In this work, we investigate the reasons for such a lack of capability by performing an extensive bench-marking of compositional understanding in VLMs. We compare contrastive models with generative ones and analyze their differences in architecture, pre-training data, and training tasks and losses. Furthermore, we leverage In-Context Learning (ICL) as a way to improve the ability of VLMs to perform more complex reasoning and understanding given an image. Our extensive experiments demonstrate that our proposed approach outperforms baseline models across multiple compositional understanding datasets.}
 }
+
 @article{sadek2024explaining,
 abbr={TMLR},
 title={'Explaining {RL} Decisions with Trajectories{\textquoteright}: A Reproducibility Study},
@@ -28,7 +30,8 @@ note={Reproducibility Certification},
 pdf={xrl_repro.pdf},
 bibtex_show={true},
 selected={true},
-preview={xrl_repro.png}
+preview={xrl_repro.png},
+absract={This work investigates the reproducibility of the paper "Explaining RL decisions with trajectories“ by Deshmukh et al. (2023). The original paper introduces a novel approach in explainable reinforcement learning based on the attribution decisions of an agent to specific clusters of trajectories encountered during training. We verify the main claims from the paper, which state that (i) training on less trajectories induces a lower initial state value, (ii) trajectories in a cluster present similar high-level patterns, (iii) distant trajectories influence the decision of an agent, and (iv) humans correctly identify the attributed trajectories to the decision of the agent. We recover the environments used by the authors based on the partial original code they provided for one of the environments (Grid-World), and implemented the remaining from scratch (Seaquest and HalfCheetah, Breakout, Q*Bert). While we confirm that (i), (ii), and (iii) partially hold, we extend on the largely qualitative experiments from the authors by introducing a quantitative metric to further support (iii), and new experiments and visual results for (i). Moreover, we investigate the use of different clustering algorithms and encoder architectures to further support (ii). We could not support (iv), given the limited extent of the original experiments. We conclude that, while some of the claims can be supported, further investigations and experiments could be of interest. We recognize the novelty of the work from the authors and hope that our work paves the way for clearer and more transparent approaches.}
 }
 
 
