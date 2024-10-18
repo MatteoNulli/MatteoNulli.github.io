@@ -22,7 +22,7 @@ social: true # includes social icons at the bottom of the page
 💭 My research interests lie in bridging the gap between Vision and Language within AI systems. Particulary, I am interested in enhancing performance of multimodal models on complex reasoning tasks such as compositional understanding, where they still lack capabilities. I strive to align the performance of Multimodal foundation models to that of LLMs. 
 <!-- I am also interested in Reinforcement Learning applied to robotics.  -->
 
-📚 Currently I am working as Applied Scientist on Multimodal Learning at eBay. 
+📚 Currently working as Applied Scientist on Multimodal Learning at eBay and studying Deep Learning for NLP.
 
 Always open to hear about possible research collaborations, feel free to reach out.
 
