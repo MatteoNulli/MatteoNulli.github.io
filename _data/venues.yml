@@ -15,3 +15,7 @@
 "ICML FMW":
   color: "#009f36"
   url: "https://icml-fm-wild.github.io"
+
+"NeurIPS ENLSP":
+  color: "#9f0000"
+  url: "https://neurips2024-enlsp.github.io/"
