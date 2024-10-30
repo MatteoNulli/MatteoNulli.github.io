@@ -9,13 +9,13 @@
   color: "#009f36"
 
 "TMLR":
-  color: "#191970"
+  color: "#009f36"
   url: "https://www.jmlr.org/tmlr/"
 
-"ICML FMW":
+"FMW@ICML":
   color: "#009f36"
   url: "https://icml-fm-wild.github.io"
 
-"NeurIPS ENLSP":
-  color: "#9f0000"
+"ENLSP@NeurIPS":
+  color: "#009f36"
   url: "https://neurips2024-enlsp.github.io/"

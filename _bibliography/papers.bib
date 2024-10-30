@@ -10,6 +10,7 @@ journal={NeurIPS Efficient Natural Language and Speech Processing},
 url={https://arxiv.org/abs/2410.18952},
 html={https://arxiv.org/abs/2410.18952},
 selected={true},
+abbr={ENLSP@NeurIPS},
 preview={ee-nips.png},
 pdf={https://arxiv.org/pdf/2410.18952}, 
 abstract={Increasing the size of large language models (LLMs) has been shown to lead to better performance. However, this comes at the cost of slower and more expensive inference. Early-exiting is a promising approach for improving the efficiency of LLM inference by enabling next token prediction at intermediate layers. Yet, the large vocabulary size in modern LLMs makes the confidence estimation required for exit decisions computationally expensive, diminishing the efficiency gains. To address this, we propose dynamically pruning the vocabulary at test time for each token. Specifically, the vocabulary is pruned at one of the initial layers, and the smaller vocabulary is then used throughout the rest of the forward pass. Our experiments demonstrate that such post-hoc dynamic vocabulary pruning improves the efficiency of confidence estimation in early-exit LLMs while maintaining competitive performance.}
@@ -27,6 +28,7 @@ url={https://arxiv.org/abs/2407.15487},
 html={https://arxiv.org/abs/2407.15487}, 
 selected={true},
 preview={vlm_comp.png},
+abbr={FMW@ICML},
 pdf={https://arxiv.org/pdf/2407.15487},
 abstract={Vision-Language Models (VLMs) have shown remarkable capabilities in a large number of downstream tasks. Nonetheless, compositional image understanding remains a rather difficult task due to the object bias present in training data. In this work, we investigate the reasons for such a lack of capability by performing an extensive bench-marking of compositional understanding in VLMs. We compare contrastive models with generative ones and analyze their differences in architecture, pre-training data, and training tasks and losses. Furthermore, we leverage In-Context Learning (ICL) as a way to improve the ability of VLMs to perform more complex reasoning and understanding given an image. Our extensive experiments demonstrate that our proposed approach outperforms baseline models across multiple compositional understanding datasets.}
 }
@@ -43,6 +45,7 @@ note={Reproducibility Certification},
 pdf={xrl_repro.pdf},
 bibtex_show={true},
 selected={true},
+abbr={TMLR},
 preview={xrl_repro.png},
 abstract={This work investigates the reproducibility of the paper "Explaining RL decisions with trajectories“ by Deshmukh et al. (2023). The original paper introduces a novel approach in explainable reinforcement learning based on the attribution decisions of an agent to specific clusters of trajectories encountered during training. We verify the main claims from the paper, which state that (i) training on less trajectories induces a lower initial state value, (ii) trajectories in a cluster present similar high-level patterns, (iii) distant trajectories influence the decision of an agent, and (iv) humans correctly identify the attributed trajectories to the decision of the agent. We recover the environments used by the authors based on the partial original code they provided for one of the environments (Grid-World), and implemented the remaining from scratch (Seaquest and HalfCheetah, Breakout, Q*Bert). While we confirm that (i), (ii), and (iii) partially hold, we extend on the largely qualitative experiments from the authors by introducing a quantitative metric to further support (iii), and new experiments and visual results for (i). Moreover, we investigate the use of different clustering algorithms and encoder architectures to further support (ii). We could not support (iv), given the limited extent of the original experiments. We conclude that, while some of the claims can be supported, further investigations and experiments could be of interest. We recognize the novelty of the work from the authors and hope that our work paves the way for clearer and more transparent approaches.}
 }
