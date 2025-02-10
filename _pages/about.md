@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
+subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, AI Student @ <a href='https://www.uva.nl'>University of Amsterdam</a>
 
 profile:
   align: right
@@ -23,7 +23,7 @@ social: true # includes social icons at the bottom of the page
 
 💭 My research interest is in Multimodal LLMs. Particulary, I am looking at visual-representation learning and how to leverage it for extensive image-understanding in Multimodal models. 
 
-📚 Currently focusing on compositional understanding for my thesis and working on Multimodal Learning. 
+📚 Currently working on my master thesis on compositional understanding and visual grounding in Multimodal models. 
 
 Always open to hear about possible research collaborations, feel free to reach out.
 
