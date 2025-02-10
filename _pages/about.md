@@ -21,9 +21,9 @@ social: true # includes social icons at the bottom of the page
 
 📌 Hi, this is Matteo, a MSc student in [Artificial Intelligence](https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html) at the University of Amsterdam and a Applied Research Intern in Multmodality at eBay. Previously, I graduated from [Bocconi University](https://www.unibocconi.it/en) with a BSc in [Mathematical and Computing Sciences for AI](https://www.unibocconi.eu/wps/wcm/connect/bocconi/sitopubblico_en/navigation+tree/home/programs/bachelor+of+science/mathematical+and+computing+sciences+for+artificial+intelligence/mathematical+and+computing+sciences+for+artificial+intelligence/) and was an exchange student at the [University of Sydney](https://www.sydney.edu.au) with a full scholarship, taking courses in Applied Mathematics and Computer Science.   
 
-💭 My research interest is in Multimodal LLMs. Particulary, I am looking at visual-representation learning and how to leverage it for extensive image-understanding in Multimodal models. 
+💭 My research interest is in Multimodal Learning. Particulary, I am looking at visual-representation learning and how to leverage it for extensive image-understanding in Multimodal Large Language Models. 
 
-📚 Currently working on my master thesis on compositional understanding and visual grounding in Multimodal models. 
+📚 Currently working on my master thesis on compositional understanding and visual grounding in Multimodal models, supervised by prof Yuki Asano. 
 
 Always open to hear about possible research collaborations, feel free to reach out.
 
