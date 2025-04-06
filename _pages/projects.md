@@ -1,11 +1,11 @@
 ---
 layout: page
-title: pictures
+title: cool projects
 permalink: /projects/
-description: 📷  my things, just for fun  📷 
+description: some of the cool things I do 📚 📷 
 nav: true
 nav_order: 3
-display_categories: [fun, work]
+display_categories: [work,fun]
 horizontal: false
 ---
 
