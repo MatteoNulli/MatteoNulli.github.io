@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Today, I started working at eBay, joining the NLP Team in the Amsterdam office. The internship will focus on multimodal research and development for data, architecture and pre-training. Excited to start! 
+Today, I started working at eBay, joining the Foundation Models Team in the Amsterdam office. The internship will focus on multimodal research and development for data, architecture and pre-training. Excited to start! 
