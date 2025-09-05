@@ -33,3 +33,9 @@ Deployed successfully!
 For any further reference here is a helpful [video](https://youtu.be/g6AJ9qPPoyc?si=sjncbxFYPYlTTEsu). 
 
 
+
+## Commands for Installation
+
+Refer to [this guide](https://jekyllrb.com/docs/installation/macos/) to install ruby and Jekyll.
+
+
