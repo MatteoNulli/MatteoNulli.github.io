@@ -130,8 +130,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # # Blog
 # # -----------------------------------------------------------------------------
 
-blog_name: Matteo's projects # blog_name will be displayed in your blog page
-blog_description: Links to university and independent projects
+blog_name: DeepStream # blog_name will be displayed in your blog page
+blog_description: My own  experiments, thoughts & research on <br>  <code>Multimodal Learning, Inference Optimisation <br> and Deep Learning </code> # blog_description will be displayed in your blog page
 permalink: /blog/:year/:title/
 lsi: true # produce an index for related posts
 
@@ -148,7 +148,7 @@ related_blog_posts:
 # giscus:
 #   repo: https://github.com/joanvelja/Confidently_Exiting/tree/main
 #   repo_id: # leave empty or specify your repo_id (see https://giscus.app/)
-#   category: Comments # name of the category under which discussions will be created
+  # category: Comments # name of the category under which discussions will be created
 #   category_id: # leave empty or specify your category_id (see https://giscus.app/)
 #   mapping: title # identify discussions by post title
 #   strict: 1 # use strict identification mode
@@ -170,11 +170,12 @@ external_sources:
     posts:
       - url: https://github.com/joanvelja/Confidently_Exiting/blob/main/blogpost.md
         published_date: 2024-05-31
-        category: "LLMs"
-  - name: Google Blog
-    posts:
-      - url: https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/
-        published_date: 2024-05-14
+
+  # - name: "Object-Guided Visual Tokens: Eliciting Compositional Reasoning in Multimodal Language Models"
+  #   posts:
+  #     - url: https://github.com/MatteoNulli/og_llava/blob/main/paper/LongPaper.pdf
+  #       published_date: 2025-09-05
+  #       category: "Multimodal Learning"
 
 # -----------------------------------------------------------------------------
 # Collections
@@ -295,8 +296,8 @@ jekyll-archives:
     tag: "/blog/tag/:name/"
     category: "/blog/category/:name/"
 
-# display_tags: ["LargeLanguageModels", "early-exiting"] # these tags will be displayed on the front page of your blog
-# display_categories: ["LLMs"] # these categories will be displayed on the front page of your blog
+display_tags: ["Multimodal-Learning", "Compositional-Reasoning", "Visual-Grounding"] # these tags will be displayed on the front page of your blog
+# display_categories: ["Multimodal-Learning", "Inference-Optimisation"] # these categories will be displayed on the front page of your blog
 
 # -----------------------------------------------------------------------------
 # Jekyll Scholar
