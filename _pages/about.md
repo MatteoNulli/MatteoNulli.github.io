@@ -18,14 +18,15 @@ social: true # includes social icons at the bottom of the page
 ---
 
 
-📌 Hi, this is Matteo, an Applied Researcher at eBay with the Foundation Models Team and a former [ELLIS Honours](https://ivi.fnwi.uva.nl/ellis/people/) student in [Artificial Intelligence](https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html) at the University of Amsterdam. For my master thesis, I collaborated with [Yuki Asano](https://yukimasano.github.io/), [Ivona Najdenkoska](https://ivonajdenkoska.github.io/) and [Mohammad Mahdi Derakhshani](https://mmderakhshani.github.io/) to investigate Compositional Reasoning in Multimodal Foundation Models. My work at eBay, focuses on training Multimodal Models and inference optimization with [Vladimir Orshulevich](https://www.linkedin.com/in/vladimir-orshulevich-289a7a170/) and [Hadi Hashemi](https://www.seyyedhadihashemi.com/). 
+📌 Hi, this is Matteo, an Applied Researcher at eBay with the Foundation Models Team. My work at eBay, focuses on training Multimodal Models and inference optimization with [Vladimir Orshulevich](https://www.linkedin.com/in/vladimir-orshulevich-289a7a170/) and [Hadi Hashemi](https://www.seyyedhadihashemi.com/). 
+I am also a MSc [ELLIS Honours](https://ivi.fnwi.uva.nl/ellis/people/) graduate in [Artificial Intelligence](https://www.uva.nl/shared-content/programmas/en/masters/artificial-intelligence/artificial-intelligence.html) at the University of Amsterdam. For my master thesis, I was lucky to be suprevised by [Yuki Asano](https://yukimasano.github.io/) at [FunAI Lab](https://fundamentalailab.github.io/), [Ivona Najdenkoska](https://ivonajdenkoska.github.io/) and [Mohammad Mahdi Derakhshani](https://mmderakhshani.github.io/) to investigate Compositional Reasoning in Multimodal Foundation Models. 
 
-Previously, I graduated from [Bocconi University](https://www.unibocconi.it/en) with a BSc in [Mathematical and Computing Sciences for AI](https://www.unibocconi.eu/wps/wcm/connect/bocconi/sitopubblico_en/navigation+tree/home/programs/bachelor+of+science/mathematical+and+computing+sciences+for+artificial+intelligence/mathematical+and+computing+sciences+for+artificial+intelligence/) and was an exchange student in Applied Mathematics and Computer Science at the [University of Sydney](https://www.sydney.edu.au) with a full-ride scholarship. 
+🔙 Previously, I graduated from [Bocconi University](https://www.unibocconi.it/en) with a BSc in [Mathematical and Computing Sciences for AI](https://www.unibocconi.eu/wps/wcm/connect/bocconi/sitopubblico_en/navigation+tree/home/programs/bachelor+of+science/mathematical+and+computing+sciences+for+artificial+intelligence/mathematical+and+computing+sciences+for+artificial+intelligence/) and was an exchange student in Applied Mathematics and Computer Science at the [University of Sydney](https://www.sydney.edu.au) with a full-ride scholarship. 
 
 💭 My research interes lies in the intersection between Language and Vision. I am particularly interested in linking multiple modalities together.
 Recently I studied visual representation learning and how to leverage it for extensive image-understanding in MLLMs. 
 
-📚 Currently working at ebay on inference optimization for multimodal models as well as continuing my research into Compositional Reasoning. 
+📚 Currently working at ebay on multimodal search reasoning and VLMs inference optimization as well as continuing my research into Compositional Reasoning. 
 
 Always open to hear about possible research collaborations, feel free to reach out.
 
