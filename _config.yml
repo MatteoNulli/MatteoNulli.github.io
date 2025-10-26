@@ -296,7 +296,7 @@ jekyll-archives:
     tag: "/blog/tag/:name/"
     category: "/blog/category/:name/"
 
-display_tags: ["Multimodal-Learning", "Compositional-Reasoning", "Visual-Grounding"] # these tags will be displayed on the front page of your blog
+display_tags: ["Multimodal-Learning", "Compositional-Reasoning", "Inference-Optimization", "Visual-Grounding"] # these tags will be displayed on the front page of your blog
 # display_categories: ["Multimodal-Learning", "Inference-Optimisation"] # these categories will be displayed on the front page of your blog
 
 # -----------------------------------------------------------------------------
