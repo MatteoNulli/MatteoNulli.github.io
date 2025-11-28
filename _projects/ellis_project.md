@@ -4,7 +4,7 @@ title: ELLIS Honours Student 2025
 description: Part of ELLIS Honours Students for the Master of AI
 img: assets/img/ellis_me.png
 importance: 1
-category: work
+category: research
 related_publications: false
 ---
 

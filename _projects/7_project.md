@@ -4,7 +4,7 @@ title: F1
 description: Formula 1 side-track pictures
 img: assets/img/ams0019.jpg
 importance: 1
-category: fun
+category: other
 related_publications: false
 ---
 

@@ -4,7 +4,7 @@ title: Amsterdam
 description: Camera Roll pictures from Amsterdam and The Netherlands
 img: /assets/img/ams0027.jpg
 importance: 1
-category: fun
+category: other
 related_publications: true
 ---
 

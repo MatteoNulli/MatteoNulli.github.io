@@ -4,7 +4,7 @@ title: Nova 111 Student List 2025
 description: Among the most promising Italian Students
 img: assets/img/nova_me.png
 importance: 1
-category: work
+category: research
 related_publications: false
 ---
 

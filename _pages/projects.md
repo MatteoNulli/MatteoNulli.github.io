@@ -1,11 +1,11 @@
 ---
 layout: page
-title: other stuff
+title: My (other) Projects
 permalink: /projects/
 description: some of the things I do 📚 📷 
 nav: true
 nav_order: 4
-display_categories: [work,fun]
+display_categories: [research,other]
 horizontal: false
 ---
 
