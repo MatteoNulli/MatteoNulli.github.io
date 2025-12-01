@@ -53,9 +53,7 @@ GEM
     ffi (1.16.3)
     forwardable-extended (2.6.0)
     gemoji (4.1.0)
-    google-protobuf (3.25.3-aarch64-linux)
-    google-protobuf (3.25.3-arm64-darwin)
-    google-protobuf (3.25.3-x86_64-linux)
+    google-protobuf (3.25.3)
     html-pipeline (2.14.3)
       activesupport (>= 2)
       nokogiri (>= 1.4)
@@ -140,12 +138,14 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.7.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     matrix (0.4.2)
     mercenary (0.4.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     mini_racer (0.12.0)
       libv8-node (~> 21.7.2.0)
     minitest (5.22.3)
@@ -153,12 +153,10 @@ GEM
     mutex_m (0.2.0)
     namae (1.2.0)
       racc (~> 1.7)
-    nokogiri (1.16.5-aarch64-linux)
+    nokogiri (1.16.5)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.16.5-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.5-x86_64-linux)
-      racc (~> 1.4)
+    observer (0.1.2)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (5.0.5)
@@ -191,6 +189,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux-gnu
 
 DEPENDENCIES
@@ -214,7 +213,9 @@ DEPENDENCIES
   jekyll-toc
   jekyll-twitter-plugin
   jemoji
+  logger
   mini_racer
+  observer (~> 0.1.0)
   unicode_utils
   webrick
 
