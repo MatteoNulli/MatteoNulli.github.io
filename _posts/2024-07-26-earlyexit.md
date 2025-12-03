@@ -343,17 +343,17 @@ m = \underset{j\in J}{\text{argmax}} \frac{1}{\ell - j} \text{JSD} (p_{\ell}(x_t
 $$
 </p>
 
-To illustrate the above method, in ([Figure 6](#jsds)) we show the JSD contrast on a given sample. 
+To illustrate the above method, in ([Figure 6](#figure-6)) we show the JSD contrast on a given sample. 
 
 <!-- === Figure 6 === -->
 <div class="row mt-3">
   <div class="col-sm mt-3 mt-md-0">
-    <a id="jsds"></a>
+  <a id="figure-6"></a>
     {% include figure.liquid loading="eager" path="./assets/img/early_exit/jsds.png" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  Figure 6: Evolution in <i>JSD</i> distribution. T5-model, SQuAD Dataset
+  <b>Figure 6:</b> Evolution in <i>JSD</i> distribution. T5-model, SQuAD Dataset
 </div>
 
 We will call this technique "Jensen-Shannon Divergence (JSD) Contrastive Decoding". 
@@ -364,7 +364,7 @@ Finally, to get the best of both worlds, we experiment with a mixed approach bet
 
 ### Softmax Speed-Up
 In this section, we report the results of the different Softmax vocabulary reductions applied to the $\textbf{W}_{j}$ matrix. The aim is to achieve similar performance with regards to the evaluation metrics, while significantly reducing the amount of FLOPs required.
-We implement the previously proposed approaches and perform our experiments by building on the available <a href="https://github.com/raymin0223/fast_robust_early_exit" target="_blank" rel="noopener noreferrer">  codebase implementation</a>. The minimum exit layer is based on the lowest confidence level found in [Figure 3](#figure-3) and [Figure 4](#figure-4). We run experiments, either with the Fixed or Decaying approaches, as presented in [Section "Early Exiting via the Softmax Approach"](#early-exiting-via-the-softmax-approach). We evaluate the models based on their respective performance metrics and the number of floating point operations (FLOPs). The evaluation is conducted for both the Question-Answering (see [Figure 7](#figure-6)) and Summarization task (see [Figure 8](#figure-7)).
+We implement the previously proposed approaches and perform our experiments by building on the available <a href="https://github.com/raymin0223/fast_robust_early_exit" target="_blank" rel="noopener noreferrer">  codebase implementation</a>. The minimum exit layer is based on the lowest confidence level found in [Figure 3](#figure-3) and [Figure 4](#figure-4). We run experiments, either with the Fixed or Decaying approaches, as presented in [Section "Early Exiting via the Softmax Approach"](#early-exiting-via-the-softmax-approach). We evaluate the models based on their respective performance metrics and the number of floating point operations (FLOPs). The evaluation is conducted for both the Question-Answering (see [Figure 7](#figure-7)) and Summarization task (see [Figure 8](#figure-8)).
 
 <!-- === Figure 7 (side-by-side) === -->
 <div class="row mt-3">
@@ -378,7 +378,7 @@ We implement the previously proposed approaches and perform our experiments by b
   </div>
 </div>
 <div class="caption">
-  <a id="figure-6"></a><b>Figure 7:</b> Performance on Question-Answering Task: Comparison of model performance in terms of F1 score and the number of FLOPs generated per sample during confidence estimation. The minimum exit layer was set to 7 for T5-Large (which sets <i>k=842</i> for fixed) and 2 for T5-Large Finetuned (which sets <i>k=2781</i> for fixed), with the confidence set to 0.9. The amount of FLOPs represents the average from 100 samples and is only calculated during confidence estimation. <a href="#fast-robust-early-exiting-2023">Bae et al. (2023)</a>.
+  <a id="figure-7"></a><b>Figure 7:</b> Performance on Question-Answering Task: Comparison of model performance in terms of F1 score and the number of FLOPs generated per sample during confidence estimation. The minimum exit layer was set to 7 for T5-Large (which sets <i>k=842</i> for fixed) and 2 for T5-Large Finetuned (which sets <i>k=2781</i> for fixed), with the confidence set to 0.9. The amount of FLOPs represents the average from 100 samples and is only calculated during confidence estimation. <a href="#fast-robust-early-exiting-2023">Bae et al. (2023)</a>.
 </div>
 
 <!-- === Figure 8 (side-by-side) === -->
@@ -393,7 +393,7 @@ We implement the previously proposed approaches and perform our experiments by b
   </div>
 </div>
 <div class="caption">
-  <a id="figure-7"></a><b>Figure 8:</b> <b>Performance on Summarization Task</b>: Comparison of model performance in terms of ROUGE-L score and the number of FLOPs generated per sample. The minimum exit layer was set to 7 for T5-Large (which sets <i>k=842</i> for fixed) and 2 for T5-Large Finetuned (which sets <i>k=2781</i> for fixed), with the confidence set at 0.9 for both. The amount of FLOPs represents the average from 100 samples and is only calculated during confidence estimation. <a href="fast-robust-early-exiting-2023">Bae et al. (2023)</a>.
+  <a id="figure-8"></a><b>Figure 8:</b> Performance on Summarization Task. Comparison of model performance in terms of ROUGE-L score and the number of FLOPs generated per sample. The minimum exit layer was set to 7 for T5-Large (which sets <i>k=842</i> for fixed) and 2 for T5-Large Finetuned (which sets <i>k=2781</i> for fixed), with the confidence set at 0.9 for both. The amount of FLOPs represents the average from 100 samples and is only calculated during confidence estimation. <a href="fast-robust-early-exiting-2023">Bae et al. (2023)</a>.
 </div>
 
 <p>
@@ -405,7 +405,7 @@ We implement the previously proposed approaches and perform our experiments by b
 
 In this section, we analyze the behavior of the two implemented versions of Contrastive Decoding confidence measures, Weighted and Jensen-Shannon Divergence (JSD). The goal of this section is to illustrate the impact of CD on the performance and average early exit of the model. 
 
-Results from [Figure 9](#figure-8) show Weighted contrastive decoding achieving comparable average exit layer with Softmax baseline by ([Schuster et al., 2022](#confident-adaptive-language-modeling-2022)), while still retaining almost all the performance. More interesting is the behaviour of JSD, which consistently beats the Softmax baseline. The method is exiting earlier with an average gain of 2.5 blocks, while also achieving higher performance with a 2\% increase over the no-exiting baseline (green dot). 
+Results from [Figure 9](#figure-9) show Weighted contrastive decoding achieving comparable average exit layer with Softmax baseline by ([Schuster et al., 2022](#confident-adaptive-language-modeling-2022)), while still retaining almost all the performance. More interesting is the behaviour of JSD, which consistently beats the Softmax baseline. The method is exiting earlier with an average gain of 2.5 blocks, while also achieving higher performance with a 2\% increase over the no-exiting baseline (green dot). 
 
 <!-- === Figure 9 (side-by-side) === -->
 <div class="row mt-3">
@@ -419,10 +419,10 @@ Results from [Figure 9](#figure-8) show Weighted contrastive decoding achieving 
   </div>
 </div>
 <div class="caption">
-  <a id="figure-8"></a><b>Figure 9:</b> SQuAD Average Exit and F1. Results are reported on t5-large non-finetuned model on SQuAD dataset. Due to time and compute constraints, the results displayed are computed on 100 samples.
+  <a id="figure-9"></a><b>Figure 9:</b> SQuAD Average Exit and F1. Results are reported on t5-large non-finetuned model on SQuAD dataset. Due to time and compute constraints, the results displayed are computed on 100 samples.
 </div>
 
-Evaluation on SamSum dataset, [Figure 10](#figure-9), shows notable results. While Weighted Contrastive Decoding is on par with the Softmax baseline, the JSD confidence measure is exiting earlier on average, with a 2.9 block gain against Softmax (red line). Additionally, JSD is attaining an approximate 10\% increase in Rouge-L performance if setting the minimum exit-layer to 17.
+Evaluation on SamSum dataset, [Figure 10](#figure-10), shows notable results. While Weighted Contrastive Decoding is on par with the Softmax baseline, the JSD confidence measure is exiting earlier on average, with a 2.9 block gain against Softmax (red line). Additionally, JSD is attaining an approximate 10\% increase in Rouge-L performance if setting the minimum exit-layer to 17.
 
 <!-- === Figure 10 (side-by-side) === -->
 <div class="row mt-3">
@@ -436,7 +436,7 @@ Evaluation on SamSum dataset, [Figure 10](#figure-9), shows notable results. Whi
   </div>
 </div>
 <div class="caption">
-  <a id="figure-9"></a><b>Figure 10:</b> SamSum Average Exit and Rouge-L. Results are reported on t5-large non-finetuned model on SamSum dataset. Due to time and compute constraints, the results displayed are computed on 100 samples.
+  <a id="figure-10"></a><b>Figure 10:</b> SamSum Average Exit and Rouge-L. Results are reported on t5-large non-finetuned model on SamSum dataset. Due to time and compute constraints, the results displayed are computed on 100 samples.
 </div>
 
 
@@ -449,7 +449,7 @@ We will report the average exit block, the performance score,  and the computed 
 
 We perform a series of experiments aimed at understanding the best possible vocabulary pruning method for the best CD confidence measure.
 
-Following the argument in ["Contrastive Decoding"](#contrastive-decoding), we observe that the model is most performant when the minimum exit layer is selected to be among the latest ones. Keeping this in mind, Table 1 shows the average exit layer and score of the model. Both are averaged across these sensible minimum exit layers. We note that combining Adaptive Pruning with JSD beats the performance of JSD combined either with Fixed or Decaying pruning. It also obtains an average gain of 1.2 blocks against Fixed pruning on SamSum. However, JSD+Fixed achieves the highest Rouge-L score in SamSum. Given the considerations above, we choose Adaptive to be the most fitting pruning method to combine with the JSD confidence measure. We defer to Appendix A a series of detailed plots indicating all minimum exit layers in this setting.
+Following the argument in ["Contrastive Decoding"](#contrastive-decoding), we observe that the model is most performant when the minimum exit layer is selected to be among the latest ones. Keeping this in mind, [Table 1](#table-1) shows the average exit layer and score of the model. Both are averaged across these sensible minimum exit layers. We note that combining Adaptive Pruning with JSD beats the performance of JSD combined either with Fixed or Decaying pruning. It also obtains an average gain of 1.2 blocks against Fixed pruning on SamSum. However, JSD+Fixed achieves the highest Rouge-L score in SamSum. Given the considerations above, we choose Adaptive to be the most fitting pruning method to combine with the JSD confidence measure. We defer to Appendix A a series of detailed plots indicating all minimum exit layers in this setting.
 
 <!-- === Table 1 as a figure block === -->
 <div class="row mt-3">
@@ -458,7 +458,7 @@ Following the argument in ["Contrastive Decoding"](#contrastive-decoding), we ob
   </div>
 </div>
 <div class="caption">
-  <b id="jsds">Table 1:</b> JSD with pruning. Comparison across different pruning methodologies applied to Jensen-Shannon Divergence (JSD) confidence measure. The values in the table are the mean of exit/performance over 15, 17, 18, 19, 20 as early minimum exit layer ± their standard deviation. Due to time and compute constraints, the results displayed are computed on 100 samples.
+  <b id="table-1">Table 1:</b> JSD with pruning. Comparison across different pruning methodologies applied to Jensen-Shannon Divergence (JSD) confidence measure. The values in the table are the mean of exit/performance over 15, 17, 18, 19, 20 as early minimum exit layer ± their standard deviation. Due to time and compute constraints, the results displayed are computed on 100 samples.
 </div>
 
 Comparison Across different pruning methodologies applied to Jensen-Shannon Divergence (JSD) confidence measure. The values in the table are the mean of exit/performance over 15, 17, 18, 19, 20 as early minimum exit layer ± their standard deviation. Due to time and compute constraints, the results displayed are computed on 100 samples.
@@ -468,7 +468,7 @@ Comparison Across different pruning methodologies applied to Jensen-Shannon Dive
 
 Given the results of ["Speedup and Contrastive Decoding"](#speedup-and-contrastive-decoding), together with our analysis of the best minimum exit layer to use in CD, we now compare the most performing pruning method of ["Best JSD Pruning Combination"](#best-jsd-pruning-combination) with the baselines from ["Contrastive Decoding"](#contrastive-decoding) and ["Softmax Speed-Up"](#softmax-speedup). We set the minimum exit layer at 19 for all the experiments below. 
 
-In ["Softmax Speed-Up"](#softmax-speed-up) we show the considerable impact the pruning approach has on FLOPs. Similarly, Figures [10](#figure-10) and [11](#figure-11) show that removing a large number of tokens has a notable effect on compute, reducing it by almost 100 times on SQuAD and 10 on SamSum between JSD baseline and JSD with adaptive pruning. This gap is also more noteworthy when looking at the amount of performance retained. On both fine-tuned and non-finetuned models the decrease in performance between the downstream tasks is never more than 1.5%, with JSD. Lastly, we highlight the difference in results between Figure [7](#figure-6), [8](#figure-7), and Figure [10](#figure-10), [11](#figure-11), due to a higher minimum exit layer selected for the former experiments. However, in both cases, our results are consistent both in trend of terms and performance and FLOPs reduction.
+In ["Softmax Speed-Up"](#softmax-speed-up) we show the considerable impact the pruning approach has on FLOPs. Similarly, Figures [10](#figure-10) and [11](#figure-11) show that removing a large number of tokens has a notable effect on compute, reducing it by almost 100 times on SQuAD and 10 on SamSum between JSD baseline and JSD with adaptive pruning. This gap is also more noteworthy when looking at the amount of performance retained. On both fine-tuned and non-finetuned models the decrease in performance between the downstream tasks is never more than 1.5%, with JSD. Lastly, we highlight the difference in results between Figure [7](#figure-7), [8](#figure-8), and Figure [10](#figure-10), [11](#figure-11), due to a higher minimum exit layer selected for the former experiments. However, in both cases, our results are consistent both in trend of terms and performance and FLOPs reduction.
 
 In conclusion, combining a vocabulary reduction approach, together with a confidence measure method, allows us to compute considerably fewer FLOPs, while retaining the performance with respect to Softmax and JSD baselines. 
 
