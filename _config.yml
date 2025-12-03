@@ -217,7 +217,10 @@ kramdown:
     block:
       line_numbers: false
       start_line: 1
-
+  math_engine: mathjax
+  syntax_highlighter_opts:
+    disable: true
+    
 # Includes & excludes
 include: ["_pages"]
 exclude:

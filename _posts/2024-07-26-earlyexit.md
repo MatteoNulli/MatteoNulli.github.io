@@ -7,10 +7,11 @@ tags: Inference-Optimization LLMs Early-Exiting Contrastive-Decoding Efficiency
 # categories: LLMs
 thumbnail: assets/img/early_exit/softmax_shrink.jpeg
 mathjax: true
+math: true
 ---
 
 ##### K.A. Abdel Sadek *, **M. Nulli** *, J. Velja *, J. Vincenti *, G. Desimini
-###### Links: 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2025/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/)
+###### Links: 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/)
 
 ###### *Accepted to NeurIPS, Efficient Natural Language and Speech Processing*
 ###### *Equal Contribution
@@ -20,11 +21,14 @@ mathjax: true
   window.MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$','$$'], ['\\[','\\]']]
-    }
+      displayMath: [['\\[', '\\]']],
+    },
+    svg: { fontCache: 'global' }
   };
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -533,6 +537,20 @@ If you use this work, please cite:
 }
 ```
 
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 
 
 **References**
