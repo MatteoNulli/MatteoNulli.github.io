@@ -12,6 +12,18 @@ layout: default
   </style>
 {% endif %}
 
+{% if page.mathjax %}
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']]
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+{% endif %}
+
 {% assign url_beginning = page.url | slice: 0, 6 %}
 
 <div class="post">
