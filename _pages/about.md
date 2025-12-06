@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, AI @ <a href='https://www.uva.nl'>University of Amsterdam</a>,
+subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, AI @ <a href='https://www.uva.nl'>University of Amsterdam</a>
 
 profile:
   align: right
