@@ -1,8 +1,8 @@
 ---
 layout: page
-title: My (other) Projects
+title: more
 permalink: /projects/
-description: some of the things I do 📚 📷 
+description: Some of <b>more</b> the things I do 📚 📷 
 nav: true
 nav_order: 4
 display_categories: [research,other]
