@@ -12,8 +12,8 @@ profile:
     <p style="font-size: 12px;"> ⬆️ Hamilton Ave, San Jose, CA, USA</p>
     <br>
     <br>
-    <p>Stadhouderskade, 1072 AE</p>
-    <p>Amsterdam, The Netherlands</p>
+    <p style="font-size: 14px;">📌 Stadhouderskade, 1072 AE</p>
+    <p style="font-size: 14px;">   Amsterdam, Netherlands</p>
 
 news: true # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
@@ -28,7 +28,7 @@ social: true # includes social icons at the bottom of the page
 💭 My research interes lies in the intersection between Language and Vision. I am particularly interested in linking multiple modalities together.
 Recently I studied visual representation learning and how to leverage it for extensive image-understanding in MLLMs. 
 
-📚 Always open to hear about possible research collaborations, feel free to reach out.
+📚 Always open to hear about research collaborations, feel free to reach out [here](mailto:matteo.nulli@outlook.com).
 
 <!-- 
 Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
