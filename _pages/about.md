@@ -2,14 +2,17 @@
 layout: about
 title: about
 permalink: /
-subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, AI @ <a href='https://www.uva.nl'>University of Amsterdam</a>
+subtitle: Applied Researcher @ <a href='https://www.ebay.com'>eBay</a>, AI @ <a href='https://www.uva.nl'>UvA</a> & <a href='https://fundamentalailab.github.io/'>FunAI Lab</a>
 
 profile:
   align: right
   image: presentazione.jpeg
   image_circular: true # crops the image to make it circular
   more_info: >
-    <p>Science Park, 1098 XH</p>
+    <p style="font-size: 12px;"> ⬆️ Hamilton Ave, San Jose, CA, USA</p>
+    <br>
+    <br>
+    <p>Stadhouderskade, 1072 AE</p>
     <p>Amsterdam, The Netherlands</p>
 
 news: true # includes a list of news items

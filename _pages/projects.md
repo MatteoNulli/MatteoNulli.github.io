@@ -2,7 +2,7 @@
 layout: page
 title: more
 permalink: /projects/
-description: Some of <b>more</b> the things I do 📚 📷 
+description: Some <b>more</b> things I do 📚 📷 
 nav: true
 nav_order: 4
 display_categories: [research,other]
