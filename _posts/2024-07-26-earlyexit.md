@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "Optimizing Predictions: Vocabulary Reduction and Contrastive Decoding in LLMs"
-date: 2024-10-26 09:10:45
+date: 2024-11-26 09:10:45
 description: Efficiency-focused early exiting, vocabulary pruning, and contrastive decoding for LLM inference
-tags: Inference-Optimization LLMs Early-Exiting Contrastive-Decoding Efficiency
+tags: Inference-Optimisation Efficiency LLMs Early-Exiting Contrastive-Decoding
 # categories: LLMs
 thumbnail: assets/img/early_exit/softmax_shrink.jpeg
 mathjax: true
