@@ -130,7 +130,7 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # # Blog
 # # -----------------------------------------------------------------------------
 
-blog_name: The Null Hypothesis # blog_name will be displayed in your blog page
+blog_name: The Nulli Hypothesis # blog_name will be displayed in your blog page
 blog_description: Experiments, Thoughts & Research on <br>  <code>Multimodal Learning, Inference Optimisation <br> Computer Vision and Deep Learning </code> # blog_description will be displayed in your blog page
 permalink: /blog/:year/:title/
 lsi: true # produce an index for related posts
@@ -193,8 +193,8 @@ collections:
 
 announcements:
   enabled: true
-  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 10 # leave blank to include all the news in the `_news` folder
+  scrollable: false # adds a vertical scroll bar if there are more than 3 news items
+  limit: 3 # leave blank to include all the news in the `_news` folder
 
 # latest_posts:
 #   enabled: false

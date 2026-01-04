@@ -27,7 +27,7 @@ social: true # includes social icons at the bottom of the page
 
 💭 My research interes lies in the intersection between Language and Vision. I am particularly interested in linking multiple modalities together. Recently I studied visual representation learning and how to leverage it for extensive image-understanding in MLLMs. 
 
-📚 Always open to hear about research collaborations, feel free to reach out [here](mailto:matteo.nulli@outlook.com).
+📮 For collaborations, feel free to reach out at `matteo[dot]nulli[at]gmail.com`.
 
 <!-- 
 Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
