@@ -27,7 +27,7 @@ social: true # includes social icons at the bottom of the page
 
 💭 My research interest lies in the intersection between Language and Vision. I am particularly interested in fostering multimodal learning visual cues. Recently I studied visual representation learning and how to leverage it for extensive image-understanding in Multimodal Large Language Models (see [here](https://openreview.net/forum?id=yvY1T3hHEQ)). 
 
-📮 For collaborations, feel free to reach out at `matteo[dot]nulli[at]gmail.com`.
+📮 For collaborations reach out at `matteo[dot]nulli[at]outlook[dot]com`.
 
 <!-- 
 Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.

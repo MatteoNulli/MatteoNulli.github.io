@@ -6,7 +6,7 @@ title: blank # the website title (if blank, full name will be used instead)
 first_name: Matteo
 middle_name:  
 last_name: Nulli
-email: matteo.nulli@outlook.com
+# email: matteo.nulli@outlook.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 footer_text: >
@@ -73,7 +73,8 @@ acm_id: # your dl.acm.org/profile/id
 arxiv_id: MatteoNulli
 blogger_url: # your blogger URL
 bluesky_url: # your bluesky URL
-dblp_url: # your DBLP profile url
+openreview_profile: https://openreview.net/profile?id=~Matteo_Nulli1
+dblp_url: https://dblp.org/pid/382/5836
 discord_id: # your discord id (18-digit unique numerical identifier)
 facebook_id: # your facebook id
 flickr_id: # your flickr id
@@ -111,7 +112,7 @@ youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 zotero_username: # your zotero username
 
 contact_note: >
-  The best way to reach me is by email: matteo.nulli@outlook.com
+  The best way to reach me is by email: matteo[dot]nulli[at]outlook[dot]com
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
