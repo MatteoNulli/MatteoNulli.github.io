@@ -8,10 +8,13 @@ tags: Inference-Optimisation Efficiency LLMs Early-Exiting Contrastive-Decoding
 thumbnail: assets/img/early_exit/softmax_shrink.jpeg
 mathjax: true
 math: true
+importance: 2  # 1 will appear first
 ---
 
 ##### K.A. Abdel Sadek *, **M. Nulli** *, J. Velja *, J. Vincenti *, G. Desimini
-###### Links: 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/)
+###### University of Amsterdam, UvA-Bosch Delta Lab, Krueger AI Safety Lab (KASL)
+###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Uva%C2%AEmerken_ENG.png" alt="University of Amsterdam" height="24"/> &nbsp;  <img src="https://ivi.fnwi.uva.nl/uvaboschdeltalab/images/logo.png" alt="UvA-Bosch Delta Lab" height="24"/>&nbsp; <img src="https://www.kasl.ai/wp-content/uploads/2023/10/kasl-main-1.png" alt="KASL" height="24"/>&nbsp;
+###### 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/)
 
 ###### *Accepted to NeurIPS, Efficient Natural Language and Speech Processing*
 ###### *Equal Contribution

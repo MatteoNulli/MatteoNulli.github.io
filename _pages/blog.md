@@ -9,8 +9,8 @@ pagination:
   collection: posts
   permalink: /page/:num/
   per_page: 5
-  sort_field: date
-  sort_reverse: true
+  sort_field: importance
+  sort_reverse: false
   trail:
     before: 3 # The number of links before the current page
     after: 3 # The number of links after the current page -->
