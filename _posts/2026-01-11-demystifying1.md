@@ -1,12 +1,19 @@
 ---
 layout: post
 title: "De-mystifying Multimodal Learning<br><small>The Hidden Cost in Vision Language Modelling"
-date: 2026-01-30 14:14:00
-description: Unveiling Vision-Language biggest bottleneck.
+date: 2026-02-30 14:14:00
+description: Discussing Vision-Language biggest performance bottleneck
 tags: Multimodal-Learning Vision-Language-Modelling
-thumbnail: assets/img/mllms_visual_tokens_wide.png
+# thumbnail: assets/img/mllms_visual_tokens_wide.png
+thumbnail: assets/img/token_comparison_paper_revised.png
 mathjax: true
 math: true
+mermaid: true
+_styles: >
+  .mermaid svg { 
+    max-width: 100%; 
+    height: auto; 
+  }
 ---
 
 
@@ -46,23 +53,64 @@ math: true
 ## Introduction
 This is the first blogpost of the series `De-mistifying Multimodal Learning`. 
 Today we look into the Hiddent computational overhead of Vision Language Modelling, represented by **Visual Tokens** (VT). <br>
-We'll start with a [Preamle](#preamble-how-do-llms-see), giving context on how Vision Language Models (VLMs) architectural components, how they enable Large Language Models (LLMs) to understand image content and how we define Visual Tokens in the first place. <br>
+We'll start with a [preamble](#preamble-how-do-llms-see), giving context on how Vision Language Models (VLMs) architectural components, how they enable Large Language Models (LLMs) to understand image content and how we define Visual Tokens in the first place. <br>
 In the [second part](#calculating-visual-tokens) we discover **how we estimate the number of VT** without needing for model inferencing, and find out how different architectural strategies in state-of-the-art models affect this count. <br>
 [Finally](#visual-token-count-impact), we dive deeper into the effects of the amount of Visual Tokens. Trying to understand their importance, especially tied to inference optimisation.
 
 
-<a id="high_res"></a>
-<div class="row mt-3">
-  <div class="col-12">
-    <div class="mx-auto text-center" style="width: 50%;">
-      {% include figure.liquid loading="eager" path="./assets/img/mllms_visual_tokens.png" class="img-fluid rounded z-depth-1" %}
-      <div class="caption text-center mt-2">
-        Figure 1: Breakdown of VLMs/MLLMs input tokens. 
-      </div>
-    </div>
-  </div>
+<div class="mermaid" markdown="0" style="width: 110%; display: flex; justify-content: left;">
+%%{init: {"flowchart": {"defaultRenderer": "elk"}} }%%
+flowchart LR
+    %% 1. Style Definitions
+    %% dataNode: Blue border, light blue fill
+    classDef dataNode fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#0d47a1,rx:10,ry:10;
+    %% procNode: Orange border, light orange fill
+    classDef procNode fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100;
+    %% tokenNode: Green border, light green fill
+    classDef tokenNode fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#1b5e20,rx:10,ry:10;
+    %% storageNode: Purple border, light purple fill
+    classDef storageNode fill:#f4edfc,stroke:##f4edfc,stroke-width:2px,color:#4a148c,stroke-dasharray: 5 5;
+
+    %% 2. The Graph Structure
+    
+    %% STEP 1
+    subgraph Input ["Step 1: Raw Input"]
+        direction LR
+        %% Added &nbsp; spaces to force width
+        A["&nbsp;&nbsp;&nbsp;🖼️ Image&nbsp;&nbsp;&nbsp;<br/>(336x336)"]:::dataNode
+        B["&nbsp;&nbsp;&nbsp;Patch Grid&nbsp;&nbsp;&nbsp;<br/>(14x14)"]:::dataNode
+        A -->|Split| B
+    end
+
+    %% STEP 2
+    subgraph Encoder ["Step 2: Vision Encoder"]
+        direction LR
+        %% Added &nbsp; spaces to force width
+        C["&nbsp;&nbsp;&nbsp;Flatten Patches&nbsp;&nbsp;&nbsp;"]:::procNode
+        D["&nbsp;&nbsp;&nbsp;Linear Projection&nbsp;&nbsp;&nbsp;"]:::procNode
+        B --> C --> D
+    end
+    
+    %% STEP 3
+    subgraph Output ["Step 3: LLM Integration"]
+        direction TB
+        E["🟩 Visual Tokens <br/> (Vectors)"]:::tokenNode
+        F["📝 Text Tokens"]:::tokenNode
+        G[("Context Window <br/> (Budget)")]:::storageNode
+        
+        D -->|Map| E
+        E --> G
+        F --> G
+    end
+
+    %% 3. Styling - SET TO TRANSPARENT
+    %% fill:none removes the background color
+    style Input fill:none,stroke:#ccc,stroke-dasharray: 5 5
+    style Encoder fill:none,stroke:#ccc,stroke-dasharray: 5 5
+    style Output fill:none,stroke:#ccc,stroke-dasharray: 5 5
 </div>
 
+<br>
 
 ## Preamble: How do LLMs see?
 
@@ -134,17 +182,14 @@ However, simply making vision encoders which could support higher resolutions wa
 #### Modern Approaches 
 
 **Strategy A: The Dynamic Merger**
-Having revolutionazied the field, we could had to begin with the QwenVL-2.5 family of models [3](#qwen2-5-vl-2025) carried on within Qwen3VL .
-Their approach to the problem was to build a Vision Encoder, whose input resolution was not fixed. Because of this modification there is no image resizing and thus no fixed amount of visual tokens. But then you might ask, how do we then estimate their count now?
-This formula is going to depend on two more parameters, the patch size  and an additional parameter called *Spatial Merge Size* (we'll call it $SMS$), which are both always present in the `config.json` of your model. The parameter is specifying the dynamic pooling size to apply to the the output of the visual encoder in the connector. Essentially this is helping the model re-adjust the amount of patches considered into a single visual token. All in all, the VT count will depend on $H$, $W$, $PS$ and $SMS$, giving us the formula:
+We have to start with the game-changers: the QwenVL-2.5 and 3 series 3. These models ditched the "fixed resolution" rule entirely. Instead of squashing every image into a square, they process images at their native resolution.This sounds great, but it complicates our math: if the image size varies, so does the token count. To calculate it, we need a specific value from the model's config.json called the Spatial Merge Size ($SMS$). Think of $SMS$ as a compression factor—it tells the model how many raw image patches to pool together into one visual token.With this in mind, our formula becomes a bit more dynamic:
 
-<p align="center"> \[ V_{\text{Qwen}} = (H / (PS \cdot SMS)) \times (W/ (PS \cdot SMS)) \] </p>
+<p align="center"> \[ V_{\text{Qwen3}} = (H / (PS \cdot SMS)) \times (W/ (PS \cdot SMS)) \] </p>
 
-In summary, this approach **preserves aspect ratio without resizing images** and applied an additional dynamic pooling.
-The major downside? A relatively un-expected context length issues due to high-resolution multi-image inputs. 
+The Takeaway: You get **perfect aspect ratios without distortion**. The catch? You need to be careful. Large images (or several of them) can silently eat up your context window much faster than you expect.
 
 **Strategy B: The Multi-Grid / AnyRes** 
-Around the same period LLaVA-Next [6](#llava-next-2024) came up with a clever, yet expensive encoding technique called "Dynamic-High Resolution"/"Any Resolution". Depicted in [Figure 2](#high_res), it consists of splitting the image into $k\times k$ grids, with $k \in \{1, 9\}$ before the vision encoding.
+Around the same period LLaVA-Next/OneVision [6](#llava-next-2024) came up with a clever, yet expensive encoding technique called "Dynamic-High Resolution"/"Any Resolution". Depicted in [Figure 2](#high_res), it consists of splitting the image into $k\times k$ grids, with $k \in \{1, 9\}$ before the vision encoding.
 This means repeating the encoding process $(k \times k) + 1$ times, with the 1 being the picture in its entirety. 
 
 <a id="high_res"></a>
@@ -159,11 +204,13 @@ This means repeating the encoding process $(k \times k) + 1$ times, with the 1 b
   </div>
 </div>
 
+
 Although this results higher detail understanding given the entire focus of the encoder on smaller portions of the image, it also most crucially implies an enormous increase in Visual Token count. Given the calculations in the [original recipe](#original-recipe), we have 
 
-<p align="center"> \[V_{\text{llava-next}} = V_{\text{original}} * [(k \times k) + 1] \] </p> 
+<p align="center"> \[V_{\text{LLaVA-OneVision}} = V_{\text{original}} * [(k \times k) + 1] \] </p> 
 
 In a couple of words a big trade-off: <u>Massive detail vs. Massive token count.</u>
+
 
 
 **Strategy C: The Fixed Downsampler**
@@ -171,17 +218,30 @@ Gemma3 [7](#gemma-3-2025) family of models, the most recent open source VLM from
 
 The main difference between their technique and [Strategy A](#Strategy-a-The-Dynamic-Merger) is the easy but clever solution to handle higher resolution images, applying a spatial average pooling and therefore increasing the resizing input size of the model to 896. Thanks to the pooling, this yields a fixed amount of visual tokens which corresponds to 
 
-<p align="center"> \[V_{\text{gemma3}} = (H/(PS*\text{pooling})) \times (W/(PS*\text{pooling})) = (896/(14*4))^2 = 256 \] </p> 
+<p align="center"> \[V_{\text{Gemma3}} = (H/(PS*\text{pooling})) \times (W/(PS*\text{pooling})) = (896/(14*4))^2 = 256 \] </p> 
 
 with the pooling being applied within the modality connector.
 
 A common denominator in all of these is the special tokens, which are added for every picturem signaling the beginning and end of the visual content. 
+
+<a id="token-count"></a>
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="mx-auto text-center" style="width: 60%;">
+      {% include figure.liquid loading="eager" path="./assets/img/token_comparison_paper_revised.png" class="img-fluid rounded z-depth-1" %}
+      <div class="caption text-center mt-2">
+        Figure 2: We report the increase of Visual token count given the image resolution input. The image is assumed AnyRes assumes a 2x2 grid and the SMS and pooling are equal to 2. 
+      </div>
+    </div>
+  </div>
+</div>
 
 ## Visual Token Count Impact
 
 We have defined what a Visual Token (VT) is and established formulas to calculate $V$ for different architectures. 
 
 <p align="center"><code>But why does this specific number matter? Why should a machine learning engineer care if an image is represented by 256 tokens (Strategy C) or 2,500 tokens (Strategy B)?</code></p>
+
 
 The answer lies in the constraints of production environments: **Context Windows**, **Latency**, and **VRAM**.
 
@@ -224,8 +284,58 @@ This is why the formulas in Part 2 are not just theoretical trivia—they are es
 
 ## Conclusions & Key Takeaways
 
-Summary table comparing the models
-Advice for developers: Which model to choose based on compute constraints vs. detail requirements.
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Representative Models</th>
+                        <th scope="col">Strategy</th>
+                        <th scope="col">Resolution Logic</th>
+                        <th scope="col">Token Efficiency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">LLaVA1.5</td>
+                        <td>Standard Resize</td>
+                        <td>Squash to fixed $H \times W$</td>
+                        <td><span class="badge badge-secondary">Fixed Count</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Qwen3-VL</td>
+                        <td>Dynamic Merger</td>
+                        <td>Native (Preserves Aspect Ratio)</td>
+                        <td><span class="badge badge-warning">Linear Growth</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">LLaVA-OneVision</td>
+                        <td>AnyRes / Multi-Grid</td>
+                        <td>Grid Split ($k \times k$) + Overview</td>
+                        <td><span class="badge badge-danger">High Cost</span></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Gemma3</td>
+                        <td>Fixed Downsampler</td>
+                        <td>Resize + Spatial Pooling</td>
+                        <td><span class="badge badge-success">Highly Compact</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="caption text-center mt-2">
+            Table 1: We report a comparison of Visual Token calculation strategies across modern architectures in current SOTA VLMs.
+        </div>
+    </div>
+</div>
+
+Visual Tokens (VT) are the bridge between the image and language world, but they are also the primary bottleneck in VLM deployment. As we have seen, moving from a fixed-resolution model (like Gemma 3) to a dynamic one (like Qwen 2.5-VL or LLaVA-Next) can increase your input size by an order of magnitude.Here are the key takeaways to keep in mind when building multimodal systems:
+- Tokens $\neq$ Pixels: High resolution doesn't always mean high cost. It depends entirely on the architecture (e.g., Fixed Downsampler vs. Multi-Grid).
+- The "Pre-fill" Trap: Visual tokens are processed before the first word is generated. If your latency is high, check your image resolution before checking your LLM size.Context is Zero-Sum: Every visual token you use is one less token available for conversation history or few-shot examples.
+- Calculate, Don't Guess: Use the formulas provided in Part 2 to pre-calculate token counts. This allows you to dynamically resize images or adjust batch sizes to prevent OOM errors in production. 
+
+Multimodal learning is evolving rapidly, but the fundamental constraint remains: compute is finite. Mastering the math of Visual Tokens is the first step toward mastering VLM efficiency.
 
 
 ## Additional Questions to Answer

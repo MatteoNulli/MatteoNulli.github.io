@@ -4,7 +4,7 @@ permalink: /cv/
 title: cv
 nav: true
 nav_order: 3
-cv_pdf: Long_Resume_me.pdf
+cv_pdf: Long_Resume.pdf
 description: Here you can find my curriculum vitae and download the pdf on the top right.
 # toc:
 #   sidebar: left
