@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "De-mystifying Multimodal Learning<br><small>The Hidden Cost in Vision Language Modelling"
+title: "De-mystifying Multimodal Learning<br><small>The Hidden Inefficiency in Vision Language Modelling"
 date: 2026-02-30 14:14:00
 description: Discussing Vision-Language biggest performance bottleneck
 tags: Multimodal-Learning Vision-Language-Modelling
@@ -57,58 +57,6 @@ We'll start with a [preamble](#preamble-how-do-llms-see), giving context on how 
 In the [second part](#calculating-visual-tokens) we discover **how we estimate the number of VT** without needing for model inferencing, and find out how different architectural strategies in state-of-the-art models affect this count. <br>
 [Finally](#visual-token-count-impact), we dive deeper into the effects of the amount of Visual Tokens. Trying to understand their importance, especially tied to inference optimisation.
 
-
-<div class="mermaid" markdown="0" style="width: 110%; display: flex; justify-content: left;">
-%%{init: {"flowchart": {"defaultRenderer": "elk"}} }%%
-flowchart LR
-    %% 1. Style Definitions
-    %% dataNode: Blue border, light blue fill
-    classDef dataNode fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#0d47a1,rx:10,ry:10;
-    %% procNode: Orange border, light orange fill
-    classDef procNode fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100;
-    %% tokenNode: Green border, light green fill
-    classDef tokenNode fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#1b5e20,rx:10,ry:10;
-    %% storageNode: Purple border, light purple fill
-    classDef storageNode fill:#f4edfc,stroke:##f4edfc,stroke-width:2px,color:#4a148c,stroke-dasharray: 5 5;
-
-    %% 2. The Graph Structure
-    
-    %% STEP 1
-    subgraph Input ["Step 1: Raw Input"]
-        direction LR
-        %% Added &nbsp; spaces to force width
-        A["&nbsp;&nbsp;&nbsp;🖼️ Image&nbsp;&nbsp;&nbsp;<br/>(336x336)"]:::dataNode
-        B["&nbsp;&nbsp;&nbsp;Patch Grid&nbsp;&nbsp;&nbsp;<br/>(14x14)"]:::dataNode
-        A -->|Split| B
-    end
-
-    %% STEP 2
-    subgraph Encoder ["Step 2: Vision Encoder"]
-        direction LR
-        %% Added &nbsp; spaces to force width
-        C["&nbsp;&nbsp;&nbsp;Flatten Patches&nbsp;&nbsp;&nbsp;"]:::procNode
-        D["&nbsp;&nbsp;&nbsp;Linear Projection&nbsp;&nbsp;&nbsp;"]:::procNode
-        B --> C --> D
-    end
-    
-    %% STEP 3
-    subgraph Output ["Step 3: LLM Integration"]
-        direction TB
-        E["🟩 Visual Tokens <br/> (Vectors)"]:::tokenNode
-        F["📝 Text Tokens"]:::tokenNode
-        G[("Context Window <br/> (Budget)")]:::storageNode
-        
-        D -->|Map| E
-        E --> G
-        F --> G
-    end
-
-    %% 3. Styling - SET TO TRANSPARENT
-    %% fill:none removes the background color
-    style Input fill:none,stroke:#ccc,stroke-dasharray: 5 5
-    style Encoder fill:none,stroke:#ccc,stroke-dasharray: 5 5
-    style Output fill:none,stroke:#ccc,stroke-dasharray: 5 5
-</div>
 
 <br>
 
@@ -210,7 +158,6 @@ Although this results higher detail understanding given the entire focus of the 
 <p align="center"> \[V_{\text{LLaVA-OneVision}} = V_{\text{original}} * [(k \times k) + 1] \] </p> 
 
 In a couple of words a big trade-off: <u>Massive detail vs. Massive token count.</u>
-
 
 
 **Strategy C: The Fixed Downsampler**
