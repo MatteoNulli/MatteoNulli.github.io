@@ -51,12 +51,30 @@ _styles: >
         });"></script>
 
 ## Introduction
-This is the first blogpost of the series `De-mistifying Multimodal Learning`. 
-Today we look into the Hiddent computational overhead of Vision Language Modelling, represented by **Visual Tokens** (VT). <br>
-We'll start with a [preamble](#preamble-how-do-llms-see), giving context on how Vision Language Models (VLMs) architectural components, how they enable Large Language Models (LLMs) to understand image content and how we define Visual Tokens in the first place. <br>
-In the [second part](#calculating-visual-tokens) we discover **how we estimate the number of VT** without needing for model inferencing, and find out how different architectural strategies in state-of-the-art models affect this count. <br>
-[Finally](#visual-token-count-impact), we dive deeper into the effects of the amount of Visual Tokens. Trying to understand their importance, especially tied to inference optimisation.
+In the shift from text-only models to Vision Language Models (VLMs), we often talk about "parameters" and "emergent reasoning." However, there is a hidden currency that governs the performance, cost, and feasibility of these systems: **Visual Tokens (VT)**.
 
+While Large Language Models (LLMs) are natively blind, they "see" by consuming images that have been decomposed, projected, and flattened into a format they can digest. This transformation isn't free. Whether you are building a real-time assistant or an OCR pipeline, the number of visual tokens your model generates is the primary lever for inference latency, VRAM consumption, and context window management. Understanding the computational overhead of these tokens is no longer just an academic exercise—it is a production necessity.
+
+In this first installment of our series, De-mystifying Multimodal Learning, we break down the mechanics of how images become language-compatible vectors. Specifically, we will cover:
+
+What we will cover:<br>
+- [Preamble: How do LLMs see?](#preamble-how-do-llms-see): An architectural deep dive deep into the anatomy of Vision Language Models (VLMs) and the birth of the Visual Token.
+
+- [Calculating Visual Tokens](#calculating-visual-tokens): Present a practical guide to estimating token counts across different SOTA strategies—from Qwen’s dynamic merging to LLaVA’s high-resolution grids—without running a single line of inference.
+
+- [Impact of Token Count](#visual-token-count-impact): Analyse of how these tokens impact the "three pillars" of production: Context Windows, Latency, and VRAM.
+
+<a id="overview"></a>
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="mx-auto text-center" style="width: 80%;">
+      {% include figure.liquid loading="eager" path="./assets/img/vlm_tokens.png" class="img-fluid rounded z-depth-1" %}
+      <div class="caption text-center mt-2">
+        Figure 1: Overview of the Vision Token count estimation process. The estimated counts are done based on Spatial Merge Size of 2, AnyResolution of 3x3 windows and Spatial Average Pooling of size 4. C, H, W represent the channels, heigth and width of the image, whereas N and P are the number of patches and the patch dimension respectively. F and D are embedding dimension sizes outputted from the vision encoder and the MLP and V is the number of visual tokens, which depends on the type of encoder, MLP and the re-sizing of images, i.e. the actual H and W. In <a href="#calculating-visual-tokens">the section below</a>, we dive deeper into the difference between each of the models reported on the right/
+      </div>
+    </div>
+  </div>
+</div>
 
 <br>
 
@@ -64,9 +82,10 @@ In the [second part](#calculating-visual-tokens) we discover **how we estimate t
 
 It is clear that LLMs cannot see images, so how do we allow them to understand image inputs in the first place? 
 Architecturally Vision Language Models are constitued by three major components:
-- Vision Encoders (VE), usually a CLIP-like image encoder [1](#clip-2021), [2](#sigmoid-loss-2023), [3](#qwen2-5-vl-2025), but it can vary in architecture and training style. See [this](https://jina.ai/vision-encoder-survey.pdf) extensive survey for more information . 
-- Modality Connectors, often simple Multi-Layer Perceptron, with some architectures employing attention blocks [4](#blip2-2023) and other alternatives [5](#cambrian-1-2024).  
-- Large Language Models (LLMs) 
+- Vision Encoders (VE), usually a CLIP-like image encoder ([Dosovitskiy et al., 2021](#vit-2021),[Radford et al., 2021](#clip-2021), [Zhai et al., 2023](#sigmoid-loss-2023), [Bai et al., 2025](#qwen2-5-vl-2025)), but it can vary in architecture and training style. See [this](https://jina.ai/vision-encoder-survey.pdf) extensive survey for more information . 
+- Modality Connectors, often simple Multi-Layer Perceptron, with some architectures employing attention blocks ([Li et al., 2023](#blip2-2023)) and other alternatives ([Tong et al., 2024](#cambrian-1-2024), [Nulli et al,. 2025](#nulliobjectguided-2025)).  
+- Large Language Models (LLMs) ([Abhimanyu, et al. 2024](#llama-3-herd-2024)).
+
 
 Let $\mathbf{X} \in \mathbb{R}^{C \times H\times W} $ be an image and $t \in  \Sigma$ be a text input, where $\Sigma$ is the input space of character sequences.
 Furthermore let $f_{v\theta}$ be a contrastive pre-trained Vision Encoder, defined as: $$f_{v\theta}: \mathbb{R}^{C \times H \times W} \rightarrow \mathbb{R}^{V \times F},$$,
@@ -84,7 +103,7 @@ Practically, the processing flow of $f_{v\theta}$ is broken down into:
 #### 1. Patch Partitioning
 
 The first step is breaking the high-resolution image $\mathbf{X}$ into a grid of fixed-size patches.
-Assuming our image has $336 \times 336$ pixels and we use a patch size of $14 \times 14$, we divide the image into $24 \times 24 = 576$ distinct squares.
+Assuming our image has $336 \times 336$ pixels and we use a patch size of $P=14$, in standard vision encoders like CLIP, we divide the image into $24 \times 24 = 576$ distinct squares.
 Mathematically, the image is reshaped from $\mathbf{X} \in \mathbb{R}^{C \times H \times W}$ into a sequence of flattened 2D patches $\mathbf{x}_p \in \mathbb{R}^{N \times (P^2 \cdot C)}$, where $N$ is the total number of patches.
 
 #### 2. Linear Projection and Position Embeddings
@@ -96,12 +115,13 @@ Given the lack of spatial prior of Vision Transformers (ViT) (see [here](https:/
 
 The resulting vectors are passed through several Transformers Layers consisting of Multi-Head Self-Attention and MLPs, whose output is the representation of a patch within the context of the whole image. 
 
-This full process produces $\mathbf{X'} = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V\times F}$, we obtain a sequence of vectors. 
+This full process produces $\mathbf{X'} = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V\times F}$, we obtain a sequence of vectors with $F$ being the embedding dimension. 
 
 #### Connecting Modalities
 
 Getting the actual vision tokens from $\mathbf{X'}$ is just a matter of passing it through a connector, obtaining 
 $$ \mathbf{VT} = m_\gamma(\mathbf{X}') \in \mathbb{R}^{V \times D} $$
+where $D$ is the expected embedding input size of $g_{\phi}$.
 
 <br>
 
@@ -114,7 +134,7 @@ Now that we know what Visual Tokens are, you might wonder
 
 #### Original Recipe
 
-Within the first VLM architectures [5](#visual-instruction-tuning-2023) this estimation is straightforward. 
+Within the first VLM architectures ([Liu et al., 2023](#visual-instruction-tuning-2023)) this estimation is straightforward. 
 First generation VLMs relied on Vision Encoder which have a fixed input resolution and a patch size ($PS$). What this means is that whatever its input size, the picture would always be re-scaled to $H \times W$. This implies that, given both $H$ and $W$, the final number of visual tokens, i.e. dimenson $V$ 
 <p align="center"> \[ V_{\text{original}} = (H/PS) \times (W/PS)\] </p>
 
@@ -130,14 +150,14 @@ However, simply making vision encoders which could support higher resolutions wa
 #### Modern Approaches 
 
 **Strategy A: The Dynamic Merger**
-We have to start with the game-changers: the QwenVL-2.5 and 3 series 3. These models ditched the "fixed resolution" rule entirely. Instead of squashing every image into a square, they process images at their native resolution.This sounds great, but it complicates our math: if the image size varies, so does the token count. To calculate it, we need a specific value from the model's config.json called the Spatial Merge Size ($SMS$). Think of $SMS$ as a compression factor—it tells the model how many raw image patches to pool together into one visual token.With this in mind, our formula becomes a bit more dynamic:
+We have to start with the game-changers: the QwenVL-2.5 and 3 series ([Bai et al. 2025](#qwen2-5-vl-2025), [QwenTeam, 2025](#qwen3-vl-2025)). These models ditched the "fixed resolution" rule entirely. Instead of squashing every image into a square, they process images at their native resolution. This sounds great, but it complicates our math: if the image size varies, so does the token count. To calculate it, we need a specific value from the model's config.json called the Spatial Merge Size ($SMS$). Think of $SMS$ as a compression factor—it tells the model how many raw image patches to pool together into one visual token.With this in mind, our formula becomes a bit more dynamic:
 
 <p align="center"> \[ V_{\text{Qwen3}} = (H / (PS \cdot SMS)) \times (W/ (PS \cdot SMS)) \] </p>
 
 The Takeaway: You get **perfect aspect ratios without distortion**. The catch? You need to be careful. Large images (or several of them) can silently eat up your context window much faster than you expect.
 
 **Strategy B: The Multi-Grid / AnyRes** 
-Around the same period LLaVA-Next/OneVision [6](#llava-next-2024) came up with a clever, yet expensive encoding technique called "Dynamic-High Resolution"/"Any Resolution". Depicted in [Figure 2](#high_res), it consists of splitting the image into $k\times k$ grids, with $k \in \{1, 9\}$ before the vision encoding.
+Around the same period LLaVA-Next/OneVision ([Liu et al., 2024](#llava-next-2024), [Li et al., 2024b](#llavonevision-2024)) came up with a clever, yet expensive encoding technique called "Dynamic-High Resolution"/"Any Resolution". Depicted in [Figure 2](#high_res), it consists of splitting the image into $k\times k$ grids, with $k \in \{1, 9\}$ before the vision encoding.
 This means repeating the encoding process $(k \times k) + 1$ times, with the 1 being the picture in its entirety. 
 
 <a id="high_res"></a>
@@ -146,12 +166,11 @@ This means repeating the encoding process $(k \times k) + 1$ times, with the 1 b
     <div class="mx-auto text-center" style="width: 80%;">
       {% include figure.liquid loading="eager" path="./assets/img/high_res.png" class="img-fluid rounded z-depth-1" %}
       <div class="caption text-center mt-2">
-        Figure 2: Illustration of Dynamic High Resolution on 2x2 grid. 
+        Figure 2: Illustration of Dynamic High Resolution on 2x2 grid from <a href="#llava-next-2024">LLaVA-NeXT</a> paper. 
       </div>
     </div>
   </div>
 </div>
-
 
 Although this results higher detail understanding given the entire focus of the encoder on smaller portions of the image, it also most crucially implies an enormous increase in Visual Token count. Given the calculations in the [original recipe](#original-recipe), we have 
 
@@ -159,9 +178,8 @@ Although this results higher detail understanding given the entire focus of the 
 
 In a couple of words a big trade-off: <u>Massive detail vs. Massive token count.</u>
 
-
 **Strategy C: The Fixed Downsampler**
-Gemma3 [7](#gemma-3-2025) family of models, the most recent open source VLM from gdm also employes a fixed input sized Vision Encoder (SigLIP [8](#siglip-2024)).
+Gemma3 ([Gemma-Team, 2025](#gemma-3-2025)) family of models, the most recent open source VLM from gdm also employes a fixed input sized Vision Encoder SigLIP ([Zhai et al., 2024](#siglip-2024)).
 
 The main difference between their technique and [Strategy A](#Strategy-a-The-Dynamic-Merger) is the easy but clever solution to handle higher resolution images, applying a spatial average pooling and therefore increasing the resizing input size of the model to 896. Thanks to the pooling, this yields a fixed amount of visual tokens which corresponds to 
 
@@ -177,11 +195,13 @@ A common denominator in all of these is the special tokens, which are added for 
     <div class="mx-auto text-center" style="width: 60%;">
       {% include figure.liquid loading="eager" path="./assets/img/token_comparison_paper_revised.png" class="img-fluid rounded z-depth-1" %}
       <div class="caption text-center mt-2">
-        Figure 2: We report the increase of Visual token count given the image resolution input. The image is assumed AnyRes assumes a 2x2 grid and the SMS and pooling are equal to 2. 
+        Figure 2: We report the increase of Visual token count given the image resolution input. The image is assumed AnyRes assumes a 3x3 grid and the SMS and pooling are equal to 2. 
       </div>
     </div>
   </div>
 </div>
+
+<br>
 
 ## Visual Token Count Impact
 
@@ -194,7 +214,7 @@ The answer lies in the constraints of production environments: **Context Windows
 
 **1. The Context Window Budget**
 
-Every LLM has a hard limit on its input size, denoted as the Context Window ($L_{\text{max}}$). In text-only models, this budget is consumed solely by the system prompt and user history. In VLMs, Visual Tokens consume this budget aggressively. If we denote the available context for reasoning and history as $C_{\text{text}}$, the relationship is effectively zero-sum:$$C_{\text{text}} = L_{\text{max}} - \sum_{i=1}^{N} V_{i}$$ 
+Every LLM has a hard limit on its input size, denoted as the Context Window ($L_{\text{max}}$). In text-only models, this budget is consumed solely by the system prompt, user history and input prompt. In VLMs, Visual Tokens consume this budget aggressively. If we denote the available context for reasoning and history as $C_{\text{text}}$, the relationship is effectively zero-sum: $$C_{\text{text}} = L_{\text{max}} - \sum_{i=1}^{N} V_{i}$$ 
 where $N$ is the number of images.
 
 For a "Strategy B" model (like LLaVA-Next) using a $3 \times 3$ grid, a single image might consume $\approx 2900$ tokens. If you are serving a model with a 4k or 8k context limit, a single image can consume 30-70% of your entire input capacity. 
@@ -285,13 +305,13 @@ Visual Tokens (VT) are the bridge between the image and language world, but they
 Multimodal learning is evolving rapidly, but the fundamental constraint remains: compute is finite. Mastering the math of Visual Tokens is the first step toward mastering VLM efficiency.
 
 
-## Additional Questions to Answer
+<!-- ## Additional Questions to Answer -->
 
-D. What is the cost trade-off?
+<!-- D. What is the cost trade-off? -->
 
-Context: LLaVA-OneVision uses many more tokens.
+<!-- Context: LLaVA-OneVision uses many more tokens. -->
 
-Question: "If Model A uses 256 tokens and Model B uses 2,800 tokens for the same image, what is the impact on 'Time to First Token' (latency) and VRAM?"
+<!-- Question: "If Model A uses 256 tokens and Model B uses 2,800 tokens for the same image, what is the impact on 'Time to First Token' (latency) and VRAM?" -->
 
 
 
@@ -308,6 +328,8 @@ url={https://matteonulli.github.io/blog/2026/demystifying1/}
 }
 ```
 
+<br>
+
 **References**
 
 <a id="conme-2024">Huang Irene, Lin Wei, Mirza M. Jehanzeb, Hansen Jacob A., Doveh Sivan, Butoi Victor Ion, Herzig Roei, Arbelle Assaf, Kuehne Hilde, Darrell Trevor, Gan Chuang, Oliva Aude, Feris Rogerio, Karlinsky Leonid. (2024). Conme: Rethinking Evaluation of Compositional Reasoning for Modern VLMs. arXiv preprint arXiv:2406.08164.</a>
@@ -319,8 +341,10 @@ url={https://matteonulli.github.io/blog/2026/demystifying1/}
 <a id="llavonevision-2024">Bo Li, Yuanhan Zhang, Dong Guo, Renrui Zhang, Feng Li, Hao Zhang, Kaichen Zhang, Peiyuan Zhang, Yanwei Li, Ziwei Liu, and Chunyuan Li. 2024a. Llava-onevision: Easy visual task transfer. Preprint,
 arXiv:2408.03326.</a>
 
-
 <a id="qwen2-5-vl-2025">Bai Shuai, Chen Keqin, Liu Xuejing, Wang Jialin, Ge Wenbin, Song Sibo, Dang Kai, Wang Peng, Wang Shijie, Tang Jun, Zhong Humen, Zhu Yuanzhi, Yang Mingkun, Li Zhaohai, Wan Jianqiang, Wang Pengfei, Ding Wei, Fu Zheren, Xu Yiheng, Ye Jiabo, Zhang Xi, Xie Tianbao, Cheng Zesen, Zhang Hang, Yang Zhibo, Xu Haiyang, Lin Junyang. (2025). Qwen2.5-VL Technical Report. arXiv preprint arXiv:2502.13923.</a>
+
+<a id="qwen3-vl-2025">QwenTeam. 2025. Qwen3-vl: Sharper vision, deeper
+thought, broader action.</a>
 
 <a id="internvl2-2024">OpenGVLab-Team. (2024). InternVL2: Better Than the Best—Expanding Performance Boundaries of Open-Source Multimodal Models with the Progressive Scaling Strategy. Blog post. URL https://internvl.github.io/blog/2024-07-02-InternVL-2.0/.</a>
 
@@ -329,6 +353,8 @@ arXiv:2408.03326.</a>
 <a id="bags-of-words-vlms-2023">Yuksekgonul Mert, Bianchi Federico, Kalluri Pratyusha, Jurafsky Dan, Zou James. (2023). When and Why Vision-Language Models Behave Like Bags-of-Words, and What to Do About It? arXiv preprint arXiv:2210.01936.</a>
 
 <a id="icl-compositional-vlms-2024">Nulli Matteo, Ibrahimi Anesa, Pal Avik, Lee Hoshe, Najdenkoska Ivona. (2024). In-Context Learning Improves Compositional Understanding of Vision-Language Models. In ICML 2024 Workshop on Foundation Models in the Wild. arXiv preprint arXiv:2407.15487.</a>
+
+<a id="nulliobjectguided-2025">Matteo Nulli, Ivona Najdenkoska, Mohammad Mahdi Derakhshani, and Yuki M Asano. 2025. Objectguided visual tokens: Eliciting compositional reasoning in multimodal language models. In EurIPS 2025 Workshop on Principles of Generative Modeling (PriGM)</a>
 
 <a id="vismin-2025">Awal Rabiul, Ahmadi Saba, Zhang Le, Agrawal Aishwarya. (2025). Vismin: Visual Minimal-Change Understanding. arXiv preprint arXiv:2407.16772.</a>
 
