@@ -281,9 +281,13 @@ sass:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
-  mode: 'html'        # Only minify HTML (skips JS and CSS to be safe)
-  exclude: ["robots.txt", "assets/js/search/*.js"]
-  minify_js: false    # Explicitly disable JS minification
+  compress_javascript: false
+  exclude:
+    - "assets/js/*.min.js"
+    - "assets/vendor/**"
+    - "**/*.map"
+    - "robots.txt"
+    - "assets/js/search/*.js"
   uglifier_args:      # You can leave this or remove it, it will be ignored
     harmony: true
 
