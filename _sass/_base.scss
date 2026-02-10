@@ -1134,3 +1134,13 @@ ninja-keys::part(ninja-input) {
 ninja-keys::part(ninja-input-wrapper) {
   background: var(--global-bg-color);
 }
+
+.oral-badge {
+    font-weight: bold;
+    color: #e74d3c; /* A nice professional red */
+    // border: 1px solid #e74d3c;   /* This is if we want a box around it (the box) */
+    // border-radius: 3px;   /* This is if we want a box around it (the corner radius) */
+    // padding: 2px 8px;   /* This is if we want a box around it (the padding) */
+    display: inline-block;
+    text-transform: none; /* Ensures it doesn't force lowercase/uppercase */
+}

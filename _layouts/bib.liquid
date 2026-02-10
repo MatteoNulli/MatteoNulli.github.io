@@ -167,7 +167,9 @@
       {{ periodical | strip }}
     </div>
     <div class="periodical">
-      {{ entry.note | strip }}
+      {% if entry.note %}
+        {{ entry.note | replace: 'Oral', '<span class="oral-badge">Oral</span>' }}
+      {% endif %}
     </div>
 
     <!-- Links/Buttons -->
