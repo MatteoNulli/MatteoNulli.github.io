@@ -14,7 +14,7 @@
   <a href="https://scholar.google.com/citations?user={{ site.scholar_userid }}" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
 {% endif %}
 {% if site.openreview_profile %}
-  <a href="https://openreview.net/profile?id={{ site.openreview_profile }}"title="OpenReview"><i class="fa-solid fa-book-open"></i></a>
+  <a href="https://openreview.net/profile?id={{ site.openreview_profile }}"title="OpenReview"><i class="fa-regular fa-file"></i></a>
 {% endif %}
 {% if site.semanticscholar_id %}
   <a href="https://www.semanticscholar.org/author/{{ site.semanticscholar_id }}" title="Semantic Scholar"><i class="ai ai-semantic-scholar"></i></a>
@@ -42,6 +42,9 @@
 {% endif %}
 {% if site.github_username %}
   <a href="https://github.com/{{ site.github_username }}" title="GitHub"><i class="fa-brands fa-github"></i></a>
+{% endif %}
+{% if site.huggingface_username %}
+  <a href="https://huggingface.co/{{ site.huggingface_username }}" title="Hugging Face"><i class="fa-brands fa-hugging-face"></i></a>
 {% endif %}
 {% if site.linkedin_username %}
   <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>

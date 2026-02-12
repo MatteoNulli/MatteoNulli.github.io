@@ -280,6 +280,16 @@
             },
           },
         {%- endif -%}
+        {%- if site.huggingface_username -%}
+          {
+            id: 'socials-huggingface',
+            title: 'HuggingFace',
+            section: 'Socials',
+            handler: () => {
+              window.open("https://huggingface.co/{{ site.huggingface_username }}", "_blank");
+            },
+          },
+        {%- endif -%}
         {%- if site.linkedin_username -%}
           {
             id: 'socials-linkedin',

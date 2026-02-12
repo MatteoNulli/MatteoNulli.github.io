@@ -111,6 +111,7 @@ pagination:
       {% assign postlist = site.posts %}
     {% endif %}
 
+    {% assign postlist = postlist | sort: 'date' | reverse | sort: 'importance' %}
     {% for post in postlist %}
 
     {% if post.external_source == blank %}

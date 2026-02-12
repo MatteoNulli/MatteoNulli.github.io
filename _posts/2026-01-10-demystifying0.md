@@ -1,10 +1,9 @@
 ---
 layout: post
-title: "De-mystifying Multimodal Learning<br><small>Enabiling Vision in Language Models"
+title: "<small>De-mystifying Multimodal Learning</small><br><b>Enabiling Vision in Language Models</b>"
 date: 2026-02-29 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
-# thumbnail: assets/img/mllms_visual_tokens_wide.png
 thumbnail: assets/img/demistfying_vlms_arch.png
 mathjax: true
 math: true
@@ -20,15 +19,16 @@ _styles: >
 ##### <b>Matteo Nulli</b>
 <!-- ###### eBay
 ###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg" alt="eBay" height="24"/> &nbsp;  -->
-###### 📝 [Blogpost](https://matteonulli.github.io/blog/2025/vlmsecom/)
+###### 🤗 [Comunity Article](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision/), 📝 [Blogpost](https://matteonulli.github.io/blog/2025/demystifying0/)
 <br>
 
 
 <script>
   window.MathJax = {
     tex: {
+      // Configuration for delimiters
       inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['\\[', '\\]']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
     },
     svg: { fontCache: 'global' }
   };
@@ -37,127 +37,139 @@ _styles: >
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
 </script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-        onload="renderMathInElement(document.body, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '\\[', right: '\\]', display: true},
-            {left: '$',  right: '$',  display: false},
-            {left: '\\(', right: '\\)', display: false}
-          ],
-          // keep default ignore list so code/pre are skipped
-        });"></script>
-
 ## Introduction
 
-In this first installment of our series, `De-mystifying Multimodal Learning`, we break down the mechanics of how images become language-compatible vectors. To truly understand how an LLM "sees," we must look at the mathematics defining the problem, the training objectives that align vision and text, and the specific architectural steps that process raw pixels. We will therefore cover:<br>
+In this first installment of our series, `De-mystifying Multimodal Learning`, we break down the mechanics of how images become language-compatible vectors. To truly understand how a Large Language Model (LLM) "sees," we must look at the mathematics defining the problem, the training objectives that align vision and text, and the specific architectural steps that process raw pixels, introducing Vision Language Models (VLMs). We will therefore cover:<br>
 
-[Problem Setting](#problem-setting): The mathematical foundation and formal definitions of Vision Language Models.
 
-[Contrastive Learning](): How models learn to map images and text to the same space.
+[Mathematical Formulation](#mathematical-formulation): The theoretical foundation and formal definitions of VLMs.
 
-[How do LLMs see?](#how-do-llms-see): An architectural deep dive into the birth of the Visual Token.
-<a id="overview"></a>
-<div class="row mt-3">
-  <div class="col-12">
-    <div class="mx-auto text-center" style="width: 80%;">
-      {% include figure.liquid loading="eager" path="./assets/img/demistfying_vlms_arch.png" class="img-fluid rounded z-depth-1" %}
-      <div class="caption text-center mt-2">
-        Figure 1: .
-      </div>
-    </div>
-  </div>
-</div>
+[Vision Enocoder Breakdown](#vision-enocoder-breakdown): A detailed overview of the image processing operated by the ViT-CLIP based Vision Encoders.
 
-<br>
+[Contrastive Learning](#contrastive-learning): Uncovering how CLIP models learn to algin the images and text representations into the same space.
 
-## Problem Setting
+[VLM Architecture and Flow](#vlm-architecture-and-flow): Putting it all together, diving deep in the architectural components of VLMs, detailing the birth of Visual Tokens, the source of sigths for LLMs.
 
-To understand Vision-Language Models (VLMs) / Multimodal Large Language Models (MLLMs), we first need to define the notation and the transformation pipeline formally.
 
-Let $\mathbf{X} \in \mathbb{R}^{C \times H\times W}$ be an image and $t \in \Sigma$ be a language instruction input, where $\Sigma$ is the input space of character sequences. Let $s_{\theta, \gamma, \phi}$ be an MLLM parametrized by $\theta, \gamma, \phi$. We define $f_{v\theta}$ as a contrastively pre-trained Vision Encoder model:
-<p align="center"> \[f_{v\theta}: \mathbb{R}^{C \times H \times W} \rightarrow \mathbb{R}^{V \times F},\] </p>
+<figure style="width: 80%; margin: auto; text-align: center;">
+  <img src="https://cdn-uploads.huggingface.co/production/uploads/661d4e74b8f13412f6d48a50/_UFWq5NHz0ZaPokkEazLd.png" 
+       alt="VLM Architecture" 
+       style="width: 100%;">
+  <figcaption style="margin-top: 10px; font-style: italic; color: #555;">
+    Figure 1: Adaptation of Figure from LLaVA-OneVision <a href="#llavonevision-2024">(Li et al., 2024)</a>, serving as an overview the VLM architectural process. 
+  </figcaption>
+</figure>
 
-where $V$ is the number of visual tokens and $F$ is their hidden size. $f_{t\theta'}$ represents the corresponding Text Encoder used during the pre-training phase.
 
-To bridge the gap between vision and language, we use a connector $m_\gamma: \mathbb{R}^{V \times F} \rightarrow \mathbb{R}^{V \times D}$, typically a Multi-Layer Perceptron (MLP). The token vocabulary for the model is defined as:
+## Mathematical Formulation
+
+To understand Vision-Language Models (VLMs), we first need to define the notation and the transformation pipeline formally.
+
+Let \\( \mathbf{X} \in \mathbb{R}^{C \times H\times W} \\) be an image and \\( t \in \Sigma \\) be a language instruction input, where \\( \Sigma \\) is the input space of character sequences. Let \\( s_{\theta, \gamma, \phi} \\) be an MLLM parametrized by \\( \theta, \gamma, \phi \\). We define \\( f_{v\theta} \\) as a contrastively pre-trained Vision Encoder model:
+
+$$f_{v\theta}: \mathbb{R}^{C \times H \times W} \rightarrow \mathbb{R}^{V \times F},$$
+
+where \\( V \\) is the number of visual tokens and \\( F \\) is their hidden size. \\( f_{t\theta'} \\) represents the corresponding Text Encoder used during the pre-training phase.
+
+To bridge the gap between vision and language, we use a connector \\( m_\gamma: \mathbb{R}^{V \times F} \rightarrow \mathbb{R}^{V \times D} \\), typically a Multi-Layer Perceptron (MLP). The token vocabulary for the model is defined as:
+
 $$\mathcal{V}\;=\;\mathcal{V}_{\text{vision}}\;\cup\;\mathcal{V}_{\text{text}}$$
 
 The Large Language Model itself is defined as:
-<p align="center"> \[ g_{\phi}\;:=\;\mathcal{D}_d\;\circ\;\operatorname{softmax}\;\circ\;F_{\phi'}\;\;:\;\mathbb{R}^{J\times D}\;\longrightarrow\;\mathcal{V}^{J},
-\qquad \phi=\bigl(\phi',d\bigr),\]</p>
 
-where $F_{\phi'}$ is the transformer that produces logits, and $$\mathcal{D}_d$$ is a decoding operator (such as greedy, top-$k$, or nucleus sampling) with hyper-parameters $d$. Thus, $g_{\phi}$ maps an embedded input token sequence to an output token sequence.
+$$ g_{\phi}\;:=\;\mathcal{D}_d\;\circ\;\operatorname{softmax}\;\circ\;F_{\phi'}\;\;:\;\mathbb{R}^{J\times D}\;\longrightarrow\;\mathcal{V}^{J},
+\qquad \phi=\bigl(\phi',d\bigr),$$
+
+where \\( F_{\phi'} \\) is the transformer that produces logits, and \\( \mathcal{D}_d \\) is a decoding operator (such as greedy, top-\\( k \\), or nucleus sampling) with hyper-parameters \\( d \\). Thus, \\( g_{\phi} \\) maps an embedded input token sequence to an output token sequence.
 
 
-## Vision Enocoder Architectural Breakdown
-Now that we have established the mathematical setting, let's look at the architectural implementation of the Vision Encoder $f_{v\theta}$. 
-Practically, the processing flow of $f_{v\theta}$ is broken down into the following steps:
+## Vision Enocoder Breakdown
+Now that we have established the mathematical setting, let's look at the architectural implementation of the Vision Encoder \\( f_{v\theta} \\). 
+Practically, the processing flow of \\( f_{v\theta} \\) is broken down into the following steps:
 
 #### 1. Patch Partitioning
-The first step is breaking the high-resolution image $\mathbf{X}$ into a grid of fixed-size patches.Assuming our image has $336 \times 336$ pixels and we use a patch size of $P=14$, standard vision encoders divide the image into $24 \times 24 = 576$ distinct squares. Mathematically, the image is reshaped from $\mathbf{X} \in \mathbb{R}^{C \times H \times W}$ into a sequence of flattened 2D patches $\mathbf{x}_p \in \mathbb{R}^{N \times (P^2 \cdot C)}$, where $N$ is the total number of patches.
+The first step is breaking the high-resolution image \\( \mathbf{X} \\) into a grid of fixed-size patches.Assuming our image has \\( 336 \times 336 \\) pixels and we use a patch size of \\( P=14 \\), standard \\( ^{*} \\) vision encoders divide the image into \\( 24 \times 24 = 576 \\) distinct squares. Mathematically, the image is reshaped from \\( \mathbf{X} \in \mathbb{R}^{C \times H \times W} \\) into a sequence of flattened 2D patches \\( \mathbf{x}_p \in \mathbb{R}^{N \times (P^2 \cdot C)} \\), where \\( N \\) is the total number of patches.
+
+<small> \\( ^* \\) Standard stands for CLIP-like Vision Encoders ([Radford et al., 2021](#clip-2021), [Zhai et al., 2024](#siglip-2024)).</small>
 
 #### 2. Linear Projection and Position Embeddings
-These patches are simply raw pixel values. To convert them into vectors, $f_{v\theta}$ projects each flattened patch into a latent representation through a linear layer.Given the lack of spatial priors in Vision Transformers (ViT), these vectors are equipped with learnable positional encodings, injecting "GPS-like" coordinates so the model knows where each patch belongs in the original image.
+These patches are simply raw pixel values. To convert them into vectors, \\( f_{v\theta} \\) projects each flattened patch into a latent representation through a linear layer.Given the lack of spatial priors in Vision Transformers (ViT), these vectors are equipped with learnable positional encodings, injecting "GPS-like" coordinates so the model knows where each patch belongs in the original image.
 
-<a id="vit"></a>
-<div class="row mt-3">
-  <div class="col-12">
-    <div class="mx-auto text-center" style="width: 80%;">
-      {% include figure.liquid loading="eager" path="./assets/img/vit.png" class="img-fluid rounded z-depth-1" %}
-      <div class="caption text-center mt-2">
-        Figure 2: .
-      </div>
-    </div>
-  </div>
-</div>
-
+<figure style="width: 80%; margin: auto; text-align: center;">
+  <img src="https://cdn-uploads.huggingface.co/production/uploads/661d4e74b8f13412f6d48a50/n94F6JJHFFF50QPO53P-k.png" 
+       alt="ViT Architecture" 
+       style="width: 100%;">
+  <figcaption style="margin-top: 10px; font-style: italic; color: #555;">
+      Figure 2: Architecture of Visision Transfomers (ViT) <a href="#vit-2021">(Dosovitskiy et al., 2021)</a>, serving as an overview the VLM architectural process. 
+  </figcaption>
+</figure>
 
 #### 3. Transformer Layers
-The resulting vectors are passed through several Transformer Layers consisting of Multi-Head Self-Attention and MLPs. The output is a sequence of vectors where each vector represents a patch within the context of the whole image. This full process produces the representations $\mathbf{X'} = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V\times F}$.
+The resulting vectors are passed through several Transformer Layers consisting of Multi-Head Self-Attention and MLPs. The output is a sequence of vectors where each vector represents a patch within the context of the whole image. This full process produces the representations \\( \mathbf{X'} = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V\times F} \\).
+
 
 ## Contrastive Learning
-Before the Vision Encoder $f_{v\theta}$ can be used in the MLLM pipeline, it must learn to extract features that are semantically aligned with text. 
+Before the Vision Encoder \\( f_{v\theta} \\) can be used in the MLLM pipeline, it must learn to extract features that are semantically aligned with text. 
 This is achieved through Contrastive Learning, (extra sources [here](https://arxiv.org/pdf/2103.00020), [here](https://medium.com/rectlabs/clip-contrastive-language-image-pre-training-dce66ae18fe1) and [here](https://github.com/openai/CLIP)) a learning process through which Vision Encoders learn to be powerful feature extractors, compressing visual information into vectors (tokens) semantically aligned with language.  
-Mathematically, during this pre-training phase, each encoder ($f_{v\theta}$, $$f_{t\theta'}$$) extracts feature representations for a batch of image-text pairs. Let $$t' = f_{t\theta'}(t)$$ be the text features and $$\mathbf{X}' = f_{v\theta}(\mathbf{X})$$ be the image features.
+Mathematically, during this pre-training phase, each encoder ( \\( f_{v\theta} \\), \\( f_{t\theta'} \\)) extracts feature representations for a batch of image-text pairs. Let \\( t' = f_{t\theta'}(t) \\) be the text features and \\( \mathbf{X}' = f_{v\theta}(\mathbf{X}) \\) be the image features.
 These are normalized as follows 
-<p align="center"> \[ \mathbf{X}'_{e} = \frac{\mathbf{X}'}{\|\mathbf{X}'\|_2}, \quad t'_{e} = \frac{t'}{\|t'\|_2} \] </p>
+
+$$\mathbf{X}'_{e} = \frac{\mathbf{X}'}{\|\mathbf{X}'\|_2}, \quad t'_{e} = \frac{t'}{\|t'\|_2}$$
+
 These normalized features are used to compute the pairwise cosine similarities:
-$$\textit{logits} = (\mathbf{X}_e' \cdot t_e'^T ) \cdot e^{\tau}$$where $$ t_e'^{T} $$ is the transpose of $$t_e'$$, and $\tau$ is a learnable temperature parameter.These logits are finally used to compute the joint loss function using cross-entropy (CE). The model attempts to maximize the similarity of correct image-text pairs (the diagonal of the matrix) while minimizing others:
-<p align="center"> \[\begin{aligned}
+
+$$\textit{logits} = (\mathbf{X}_e' \cdot t_e'^T ) \cdot e^{\tau}$$
+
+where \\( t_e'^{T} \\) is the transpose of \\( t_e' \\), and \\( \tau \\) is a learnable temperature parameter.These logits are finally used to compute the joint loss function using cross-entropy (CE). The model attempts to maximize the similarity of correct image-text pairs (the diagonal of the matrix) while minimizing others:
+
+$$\begin{aligned}
 \mathcal{L}_{\mathbf X} &= \operatorname{CE}(\textit{logits}, \textit{labels}, \text{axis}=0), \\[4pt]
 \mathcal{L}_{t}         &= \operatorname{CE}(\textit{logits}, \textit{labels}, \text{axis}=1), \\[4pt]
 \mathcal{L}             &= \tfrac{1}{2}\,\bigl(\mathcal{L}_{\mathbf X} + \mathcal{L}_{t}\bigr).
-\end{aligned}\] </p>
-Here, *labels* are the ground truths for that sample, and $\text{axis}=i, \text{with } i \in \{0,1\}$ represents the dimension along which the loss is computed.
+\end{aligned}$$
+
+Here, *labels* are the ground truths for that sample, and \\( \text{axis}=i, \text{with } i \in \{0,1\} \\) represents the dimension along which the loss is computed.
 
 ## VLM Architecture and Flow
 Once the Vision Encoder is pre-trained, we can assemble the full model. Architecturally, Vision Language Models are constituted by three major components:
 
-- Vision Encoders ($f_{v\theta}$), usually a CLIP-like image encoder ([Dosovitskiy et al., 2021](#vit-2021),[Radford et al., 2021](#clip-2021), [Zhai et al., 2023](#sigmoid-loss-2023), [Bai et al., 2025](#qwen2-5-vl-2025)), but it can vary in architecture and training style. See [this](https://jina.ai/vision-encoder-survey.pdf) extensive survey for more information . 
-- Modality Connectors ($m_\gamma$), often simple Multi-Layer Perceptron, with some architectures employing attention blocks ([Li et al., 2023](#blip2-2023)) and other alternatives ([Tong et al., 2024](#cambrian-1-2024), [Nulli et al,. 2025](#nulliobjectguided-2025)).  
-- Large Language Models ($g_\phi$) like Qwen3 [Yang An, et al. 2025](#qwen3-2025), Llama3 [Abhimanyu, et al. 2024](#llama-3-herd-2024), Vicuna [Wei-Lin, et al. 2023](#vicuna-2023).
+- Vision Encoders ( \\( f_{v\theta} \\)), usually a CLIP-like image encoder ([Dosovitskiy et al., 2021](#vit-2021),[Radford et al., 2021](#clip-2021), [Zhai et al., 2023](#sigmoid-loss-2023), [Bai et al., 2025](#qwen2-5-vl-2025)), but it can vary in architecture and training style. See [this](https://jina.ai/vision-encoder-survey.pdf) extensive survey for more information . 
+- Modality Connectors ( \\( m_\gamma \\)), often simple Multi-Layer Perceptron, with some architectures employing attention blocks ([Li et al., 2023](#blip2-2023)) and other alternatives ([Tong et al., 2024](#cambrian-1-2024), [Nulli et al,. 2025](#nulliobjectguided-2025)).  
+- Large Language Models ( \\( g_\phi \\)) like Qwen3 [Yang An, et al. 2025](#qwen3-2025), Llama3 [Abhimanyu, et al. 2024](#llama-3-herd-2024), Vicuna [Wei-Lin, et al. 2023](#vicuna-2023).
 
 ### Vision-Language Modeling Pipeline
-Finally, we put all the pieces together. We describe the standard pipeline of MLLMs during inference, assuming a batch size of 1.
+Finally, we put all the pieces together. We describe the classic VLM pipeline during inference.
+In our calculations below we assume:
+- We defer to our next blogpost <big>"The Hidden Inefficiency in Vision Language Modelling"</big> (coming soon), for an analysis of image pre-processing ([Li et al., 2024](#llavonevision-2024)) or other kinds of spatial merging ([QwenTeam, 2025](#qwen3-vl-2025), [Gemma-Team, 2025](#gemma-3-2025)) impacting the total visual token count. 
+- A batch size of 1.
 
-Vision Encoders $f_{v\theta}$ are used to encode an image $\mathbf{X}$ into a representation:
-<p align="center"> \[\mathbf{X}' = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V \times F}\]</p>
-Here, $F$ is the feature dimension and $V$ is the vision encoder hidden dimension, calculated as $V = (\frac{\textit{image resolution}}{\textit{patch size}})^2$.
-Subsequently, $\mathbf{X}'$ is transformed through the connector $m_\gamma$ into Visual Tokens ($\mathbf{VT}$):
-<p align="center"> \[\mathbf{VT} = m_\gamma(\mathbf{X}') \in \mathbb{R}^{V \times D} \]</p>
+Vision Encoders \\( f_{v\theta} \\) are used to encode an image \\( \mathbf{X} \\) into a representation:
+
+$$\mathbf{X}' = f_{v\theta}(\mathbf{X}) \in \mathbb{R}^{V \times F}$$
+
+Here, \\( F \\) is the feature dimension and \\( V \\) is the vision encoder hidden dimension, calculated as \\( V = (\frac{\textit{image resolution}}{\textit{patch size}})^2 \\).
+Subsequently, \\( \mathbf{X}' \\) is transformed through the connector \\( m_\gamma \\) into Visual Tokens ( \\( \mathbf{VT} \\)):
+
+$$\mathbf{VT} = m_\gamma(\mathbf{X}') \in \mathbb{R}^{V \times D}$$
+
 Crucially, these tokens now exist in the input embedding space of the Large Language Model. 
-In parallel, a Tokenizer $\mathcal{T}: \Sigma \rightarrow \mathcal{V}^{J}$ and a learned embedding $E:\mathcal{V}^{J}\;\longrightarrow\;\mathbb{R}^{D}$ turn the text input $t$ into textual tokens: $$\mathit{TT} = E^{\otimes}(\mathcal{T}(t)) \in \mathbb{R}^{J \times D},$$where $E^{\otimes}$ is the sequence-wise lifting of operator $E$.
-Lastly, the visual tokens $\mathbf{VT}$ are concatenated with the textual tokens $\mathit{TT}$ and provided as input to the LLM $g_\phi$ to obtain the output tokens $\mathbf{T}_a$:
-<p align="center"> \[\mathbf{T}_a = g_{\phi}(\mathbf{VT} \oplus \mathit{TT}) \in \mathcal{V}^{J}.\] </p>
+In parallel, a Tokenizer \\( \mathcal{T}: \Sigma \rightarrow \mathcal{V}^{J} \\) and a learned embedding \\( E:\mathcal{V}^{J}\;\longrightarrow\;\mathbb{R}^{D} \\) turn the text input \\( t \\) into textual tokens:  \\( \mathit{TT} = E^{\otimes}(\mathcal{T}(t)) \in \mathbb{R}^{J \times D} \\),
+where \\( E^{\otimes} \\) is the sequence-wise lifting of operator \\( E \\).
+Lastly, the visual tokens \\( \mathbf{VT} \\) are concatenated with the textual tokens \\( \mathit{TT} \\) and provided as input to the LLM \\( g_\phi \\) to obtain the output tokens \\( \mathbf{T}_a \\):
+
+$$\mathbf{T}_a = g_{\phi}(\mathbf{VT} \oplus \mathit{TT}) \in \mathcal{V}^{J}.$$
 
 
+## Conclusions
 
-<p align="center"><code>What is a Visual Token?</code></p>
+Through the pipeline we've explored, we have witnessed a transformation: raw pixels, once just a grid of intensity values, have been flattened, projected, and semantically aligned to emerge as Visual Tokens.
+These tokens are the "universal language" that allows an LLM to treat an image not as a foreign file type, but as a sequence of concepts—no different from the words in this sentence. By projecting visual data into the same \\(D\\)-dimensional embedding space as text, we have effectively given the LLM a pair of eyes.
 
-<br>
+## What’s Next: The Efficiency Bottleneck
+While we have successfully "digitized" sight for our models, a massive challenge remains. The impact of the amount Visual Tokens created by the vision encoding pipeline.
+
+In our next post, <big>"The Hidden Inefficiency in Vision Language Modelling"</big> (coming soon), we will dive deep into the cost of producing Visual Tokens on Inference Time & Memory Requirements. We will break down how token count quadratically impacts self-attention  \\( O(N^2) \\) and explore why reducing the visual token count is the secret to building faster, leaner, and more capable multimodal systems. 
+
 
 
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "De-mystifying Multimodal Learning<br><small>The Hidden Inefficiency in Vision Language Modelling"
+title: "<small>De-mystifying Multimodal Learning</small><br><b>The Hidden Inefficiency in Vision Language Modelling</b>"
 date: 2026-02-30 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
