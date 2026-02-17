@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-My first paper ['Explaining RL Decisions with Trajectories’: A Reproducibility Study](https://openreview.net/forum?id=QdeBbK5CSh) was just published in [Transactions on Machine Learning Research](https://www.jmlr.org/tmlr/papers/#) 🎊
+📝 My first paper ['Explaining RL Decisions with Trajectories’: A Reproducibility Study](https://openreview.net/forum?id=QdeBbK5CSh) was just published in [Transactions on Machine Learning Research](https://www.jmlr.org/tmlr/papers/#) 🎊
