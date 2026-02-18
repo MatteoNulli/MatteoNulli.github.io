@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "<small>De-mystifying Multimodal Learning</small><br><b>Enabiling Vision in Language Models</b>"
+title: "De-mystifying Multimodal Learning: <br> Enabiling Vision in Language Models"
 date: 2026-02-17 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
