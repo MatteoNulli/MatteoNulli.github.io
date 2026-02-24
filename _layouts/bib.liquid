@@ -237,6 +237,11 @@
       {% if entry.website %}
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">Website</a>
       {% endif %}
+      {% if entry.hugging_face_page %}
+        <a href="{{ entry.hugging_face_page }}" class="btn btn-sm z-depth-0" role="button">
+          <i class="fa-brands fa-hugging-face"></i> HF
+        </a>
+      {% endif %}
     </div>
     {% if site.enable_publication_badges %}
       {% assign entry_has_altmetric_badge = entry.altmetric or entry.doi or  entry.eprint or entry.pmid or entry.isbn %}
