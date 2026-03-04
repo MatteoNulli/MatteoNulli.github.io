@@ -118,7 +118,8 @@ The main differences between [Strategy B](#Strategy-b-The-Multi-Grid-AnyRes) and
 (a.) the latter can be "turned on/off" by the user at inference and is more customisable (see [code](code-1) below),<br>
 (b.) P&S can have overlapping crops, with \\( p = \text{number of crops}\\) \\( ^{**} \\).
 
-$$ V_{\text{Gemma3-P\&S}} = V_{\text{Gemma3}} \times [p + 1] $$
+$$ V_{\text{Gemma3-P&S}} = V_{\text{Gemma3}} \times [p + 1] $$
+
 
 <a id="code-1"></a>
 <figure style="width: 70%; margin: auto" markdown="1">
@@ -171,7 +172,7 @@ A small sidenote: the total visual token number should also take into account th
             <tr style="border-bottom: 1px solid #dee2e6;">
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6; font-weight: bold;">LLaVA-1.5</td>
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6;">Standard Resize</td>
-                <td style="padding: 12px 20px; border: 1px solid #dee2e6;">Squash to fixed \\( H \times W \\)</td>
+                <td style="padding: 12px 20px; border: 1px solid #dee2e6;">Squash to fixed \( H \times W \)</td>
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6; text-align: center;">
                     <span style="background-color: #95a5a6; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85em; font-weight: bold; white-space: nowrap; display: inline-block;">Fixed Count</span>
                 </td>
@@ -187,7 +188,7 @@ A small sidenote: the total visual token number should also take into account th
             <tr style="border-bottom: 1px solid #dee2e6;">
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6; font-weight: bold;">LLaVA-OneVision</td>
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6;">AnyRes / Multi-Grid</td>
-                <td style="padding: 12px 20px; border: 1px solid #dee2e6;">Grid Split ( \\( k \times k \\) ) + Overview</td>
+                <td style="padding: 12px 20px; border: 1px solid #dee2e6;">Grid Split ( \( k \times k \) ) + Overview</td>
                 <td style="padding: 12px 20px; border: 1px solid #dee2e6; text-align: center;">
                     <span style="background-color: #e74c3c; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85em; font-weight: bold; white-space: nowrap; display: inline-block;">Massive Cost</span>
                 </td>
