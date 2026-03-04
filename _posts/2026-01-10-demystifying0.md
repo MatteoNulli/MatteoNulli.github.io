@@ -181,7 +181,7 @@ In our next post, <big>"The Hidden Inefficiency in Vision Language Modelling"</b
 
 If you use this work, please cite:
 
-```bibtex
+{% highlight bibtex %}
 @misc{nulli2026enabling,
   title={De-mystifying Multimodal Learning: Enabiling Vision in Language Models},
   author={Nulli, Matteo},
@@ -190,7 +190,7 @@ If you use this work, please cite:
   howpublished={Available at \url{https://matteonulli.github.io/blog/2026/demystifying0/} and \url{https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision}},
   note={Hugging Face Blog}
 }
-```
+{% endhighlight %}
 
 <br>
 
