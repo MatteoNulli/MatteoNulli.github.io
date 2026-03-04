@@ -18,9 +18,7 @@ _styles: >
 
 
 ##### <b>Matteo Nulli</b>
-<!-- ###### eBay
-###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg" alt="eBay" height="24"/> &nbsp;  -->
-###### 🤗 [Comunity Article](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff/), 📝 [Blogpost](https://matteonulli.github.io/blog/2025/demystifying1/)
+###### 🤗 [Comunity Article](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff/), 📝 [Blogpost](https://matteonulli.github.io/blog/2026/demystifying1/)
 <br>
 
 
