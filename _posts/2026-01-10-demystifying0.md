@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "De-mystifying Multimodal Learning: <br> Enabling Vision in Language Models"
+title: "Demystifying Multimodal Learning: <br> Enabling Vision in Language Models"
 date: 2026-02-17 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
@@ -40,7 +40,7 @@ _styles: >
 
 ## Introduction
 
-In this first installment of our series, `De-mystifying Multimodal Learning`, we break down the mechanics of how images become language-compatible vectors. To truly understand how a Large Language Model (LLM) "sees", we must look at the mathematics defining the problem, the training objectives that align vision and text, and the specific architectural steps that process raw pixels, introducing Vision Language Models (VLMs). 
+In this first installment of our series, `Demystifying Multimodal Learning`, we break down the mechanics of how images become language-compatible vectors. To truly understand how a Large Language Model (LLM) "sees", we must look at the mathematics defining the problem, the training objectives that align vision and text, and the specific architectural steps that process raw pixels, introducing Vision Language Models (VLMs). 
 
 <a id="figure-1"></a>
 <figure style="width: 70%; margin: auto; text-align: center;">
@@ -183,7 +183,7 @@ If you use this work, please cite:
 
 {% highlight bibtex %}
 @misc{nulli2026enabling,
-  title={De-mystifying Multimodal Learning: Enabiling Vision in Language Models},
+  title={Demystifying Multimodal Learning: Enabiling Vision in Language Models},
   author={Nulli, Matteo},
   year={2026},
   url={https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision},

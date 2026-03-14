@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "De-mystifying Multimodal Learning: The Hidden Inefficiency in Vision Language Modelling"
+title: "Demystifying Multimodal Learning: The Hidden Inefficiency in Vision Language Modelling"
 date: 2026-03-04 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
@@ -38,7 +38,7 @@ In the shift from text-only models to Vision Language Models (VLMs), we often ta
 
 <br>
 
-In the [our previous blogpost](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision), we explored the architectural anatomy of VLMs and how images are converted into language-compatible vectors. In this second installment of `De-mystifying Multimodal Learning` we focus on the mathematics and operational impact of that conversion. Specifically, we will look at how to [Calculate Visual Tokens](#calculating-visual-tokens). Presenting a practical guide to estimating token counts across different SOTA strategies—from Qwen’s dynamic merging ([QwenTeam, 2025](#qwen3-vl-2025)), LLaVA’s Any-Res grids ([Li et al., 2024b](#llavonevision-2024)) and Gemma3 Pan&Scan ([Gemma-Team, 2025](#gemma-3-2025))—without running a single line of inference.
+In the [our previous blogpost](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision), we explored the architectural anatomy of VLMs and how images are converted into language-compatible vectors. In this second installment of `Demystifying Multimodal Learning` we focus on the mathematics and operational impact of that conversion. Specifically, we will look at how to [Calculate Visual Tokens](#calculating-visual-tokens). Presenting a practical guide to estimating token counts across different SOTA strategies—from Qwen’s dynamic merging ([QwenTeam, 2025](#qwen3-vl-2025)), LLaVA’s Any-Res grids ([Li et al., 2024b](#llavonevision-2024)) and Gemma3 Pan&Scan ([Gemma-Team, 2025](#gemma-3-2025))—without running a single line of inference.
 
 Understanding the computational overhead of these tokens is no longer just an academic exercise—it is a production necessity.
 
@@ -233,7 +233,7 @@ If you use this work, please cite:
 
 {% highlight bibtex %}
 @misc{nulli2026thehidden,
-  title={De-mystifying Multimodal Learning: The Hidden Inefficiency in Vision Language Modelling},
+  title={Demystifying Multimodal Learning: The Hidden Inefficiency in Vision Language Modelling},
   author={Nulli, Matteo},
   year={2026},
   url={https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff},
