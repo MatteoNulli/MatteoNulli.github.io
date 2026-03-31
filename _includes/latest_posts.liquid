@@ -6,12 +6,16 @@
   }
 
   .latest-post-thumb {
-    width: 320px;
-    height: 210px;
-    object-fit: cover;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    max-height: 210px;
+    object-fit: contain;
+    object-position: center;
     border-radius: 10px;
     display: block;
   }
+
 
   .latest-post-desc {
     margin: 0.45rem 0 0.45rem 0;
@@ -108,7 +112,7 @@
                 </div>
               {% endif %}
 
-              {% if item.community_article_url or item.blogpost_url %}
+              {% if item.community_article_url or item.blogpost_url or item.thesis_url or item.paper_url or item.code_url %}
                 <div class="latest-post-links">
                   {% if item.community_article_url %}
                     <a href="{{ item.community_article_url }}" title="Community Article" target="_blank" rel="noopener noreferrer">
@@ -118,6 +122,21 @@
                   {% if item.blogpost_url %}
                     <a href="{{ item.blogpost_url }}" title="Blogpost" target="_blank" rel="noopener noreferrer">
                       <i class="fa-regular fa-newspaper"></i>
+                    </a>
+                  {% endif %}
+                  {% if item.thesis_url %}
+                    <a href="{{ item.thesis_url }}" title="Thesis" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-solid fa-graduation-cap"></i>
+                    </a>
+                  {% endif %}
+                  {% if item.paper_url %}
+                    <a href="{{ item.paper_url }}" title="Paper" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-solid fa-file-lines"></i>
+                    </a>
+                  {% endif %}
+                  {% if item.code_url %}
+                    <a href="{{ item.code_url }}" title="Code" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-brands fa-github"></i>
                     </a>
                   {% endif %}
                 </div>

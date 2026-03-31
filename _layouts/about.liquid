@@ -9,8 +9,9 @@ layout: default
     align-items: center;
     justify-content: space-between;
     gap: 2.5rem;
-    min-height: 90vh;
-    padding: 2rem 0;
+    min-height: 82vh;      /* was 90vh */
+    padding: 0.5rem 0 2rem;/* less top padding */
+    margin-top: -1.5rem;   /* push name + image + socials up */
   }
 
   .hero-left { flex: 1 1 55%; }
@@ -65,7 +66,7 @@ layout: default
 
   .scroll-hint {
     text-align: center;
-    margin: -3.5rem 0 2rem;
+    margin: 0.5rem 0 2rem; /* re-balance after moving hero up */
     opacity: 0.6;
   }
 
@@ -74,7 +75,7 @@ layout: default
   }
 
   @media (max-width: 900px) {
-    .hero { flex-direction: column-reverse; text-align: center; }
+    .hero { flex-direction: column-reverse; text-align: center; margin-top: -0.75rem; min-height: auto; }
     .hero-right { justify-content: center; }
     .hero-actions { justify-content: center; }
   }
