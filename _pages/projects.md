@@ -3,7 +3,7 @@ layout: page
 title: more
 permalink: /projects/
 description: Some <b>more</b> things I do 📚 📷 
-nav: true
+# nav: true
 nav_order: 4
 display_categories: [research,other]
 horizontal: false

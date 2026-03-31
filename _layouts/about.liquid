@@ -2,6 +2,83 @@
 layout: default
 ---
 <div class="post">
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+    min-height: 90vh;
+    padding: 2rem 0;
+  }
+
+  .hero-left { flex: 1 1 55%; }
+  .hero-right { flex: 1 1 45%; display: flex; justify-content: flex-end; }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: #009f06;
+    margin-bottom: 1rem;
+  }
+
+  .hero-blurb {
+    font-size: 1.05rem;
+    opacity: 0.8;
+    max-width: 42rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero .hero-blurb a.text-primary {
+  color: #009f06 !important;
+  text-decoration: none;
+  }
+  .hero .hero-blurb a.text-primary:hover {
+    text-decoration: underline;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-socials { margin-top: 1rem; }
+  .hero-socials a {
+    font-size: 2.5rem;
+  }
+
+  .hero-img {
+    width: min(360px, 80vw);
+    aspect-ratio: 1 / 1;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .scroll-hint {
+    text-align: center;
+    margin: -3.5rem 0 2rem;
+    opacity: 0.6;
+  }
+
+  #about {
+    scroll-margin-top: 5rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero { flex-direction: column-reverse; text-align: center; }
+    .hero-right { justify-content: center; }
+    .hero-actions { justify-content: center; }
+  }
+</style>
   <header class="post-header">
     <h1 class="post-title">
       {% if site.title == 'blank' %}
@@ -51,7 +128,7 @@ layout: default
     <!-- Latest posts -->
     {% if site.latest_posts.enabled %}
       <h2>
-        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest posts</a>
+        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest blogpost</a>
       </h2>
       {% include latest_posts.liquid %}
     {% endif %}

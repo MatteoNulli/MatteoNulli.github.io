@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Demystifying Multimodal Learning: <br> Enabling Vision in Language Models"
+title: "Demystifying Multimodal Learning: Enabling Vision in Language Models"
 date: 2026-02-17 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
@@ -8,6 +8,10 @@ thumbnail: assets/img/demistfying_vlms_arch.png
 mathjax: true
 math: true
 mermaid: true
+
+community_article_url: https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision/
+blogpost_url: https://matteonulli.github.io/blog/2026/demystifying0/
+
 _styles: >
   .mermaid svg { 
     max-width: 100%; 
@@ -17,9 +21,7 @@ _styles: >
 
 
 ##### <b>Matteo Nulli</b>
-<!-- ###### eBay
-###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg" alt="eBay" height="24"/> &nbsp;  -->
-###### 🤗 [Comunity Article](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision/), 📝 [Blogpost](https://matteonulli.github.io/blog/2025/demystifying0/)
+###### <a href="https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-enabiling-vision/" title="Community Article"><i class="fa-brands fa-hugging-face" style="font-size: 1.75em;"></i></a> <a href="https://matteonulli.github.io/blog/2025/demystifying0/" title="Blogpost"><i class="fa-regular fa-newspaper" style="font-size: 1.75em;"></i></a>
 <br>
 
 

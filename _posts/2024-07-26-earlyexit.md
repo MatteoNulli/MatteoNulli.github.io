@@ -4,17 +4,22 @@ title: "Optimizing Predictions: Vocabulary Reduction and Contrastive Decoding in
 date: 2024-11-26 09:10:45
 description: Efficiency-focused early exiting, vocabulary pruning, and contrastive decoding for LLM inference
 tags: Inference-Optimisation Efficiency LLMs Early-Exiting Contrastive-Decoding
-# categories: LLMs
 thumbnail: assets/img/early_exit/softmax_shrink_pres.png
 mathjax: true
 math: true
-importance: 2  # 1 will appear first
+importance: 2
+
+paper_url: https://arxiv.org/abs/2410.18952
+blogpost_url: https://matteonulli.github.io/blog/2024/earlyexit/
+code_url: https://github.com/joanvelja/Confidently_Exiting/blob/main/
 ---
 
 ##### K.A. Abdel Sadek *, **M. Nulli** *, J. Velja *, J. Vincenti *, G. Desimini
 ###### University of Amsterdam, UvA-Bosch Delta Lab, Krueger AI Safety Lab (KASL)
 ###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Uva%C2%AEmerken_ENG.png" alt="University of Amsterdam" height="24"/> &nbsp;  <img src="https://ivi.fnwi.uva.nl/uvaboschdeltalab/images/logo.png" alt="UvA-Bosch Delta Lab" height="24"/>&nbsp; <img src="https://www.kasl.ai/wp-content/uploads/2023/10/kasl-main-1.png" alt="KASL" height="24"/>&nbsp;
-###### 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/)
+<!-- ###### 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/) -->
+
+###### <a href="https://arxiv.org/abs/2410.18952" title="Paper"><i class="fa-regular fa-file" style="font-size: 1.75em;"></i></a> <a href="https://matteonulli.github.io/blog/2024/earlyexit/" title="Blogpost"><i class="fa-regular fa-newspaper" style="font-size: 1.75em;"></i></a> <a href="https://github.com/joanvelja/Confidently_Exiting/blob/main/" title="Code"><i class="fa-brands fa-github" style="font-size: 1.75em;"></i></a>
 
 ###### *Accepted to NeurIPS, Efficient Natural Language and Speech Processing*
 ###### *Equal Contribution

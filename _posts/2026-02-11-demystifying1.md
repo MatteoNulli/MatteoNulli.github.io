@@ -6,6 +6,11 @@ description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Vision-Language-Modelling
 # thumbnail: assets/img/mllms_visual_tokens_wide.png
 thumbnail: https://cdn-uploads.huggingface.co/production/uploads/661d4e74b8f13412f6d48a50/Swoem2o9lRJO2Bs9G6e5Y.png
+
+
+community_article_url: https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff/
+blogpost_url: https://matteonulli.github.io/blog/2026/demystifying1/
+
 mathjax: true
 math: true
 mermaid: true
@@ -18,7 +23,8 @@ _styles: >
 
 
 ##### <b>Matteo Nulli</b>
-###### 🤗 [Comunity Article](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff/), 📝 [Blogpost](https://matteonulli.github.io/blog/2026/demystifying1/)
+###### <a href="https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff/" title="Community Article"><i class="fa-brands fa-hugging-face" style="font-size: 1.75em;"></i></a> <a href="https://matteonulli.github.io/blog/2026/demystifying1/" title="Blogpost"><i class="fa-regular fa-newspaper" style="font-size: 1.75em;"></i></a>
+<br>
 <br>
 
 
