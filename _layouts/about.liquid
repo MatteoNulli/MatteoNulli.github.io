@@ -25,7 +25,7 @@ layout: default
 
   .hero-subtitle {
     font-size: 1.25rem;
-    color: #009f06;
+    color: var(--global-theme-color) !important;
     margin-bottom: 1rem;
   }
 
@@ -37,10 +37,12 @@ layout: default
   }
 
   .hero .hero-blurb a.text-primary {
-  color: #009f06 !important;
-  text-decoration: none;
+    color: var(--global-theme-color) !important;
+    text-decoration: none;
   }
+
   .hero .hero-blurb a.text-primary:hover {
+    color: var(--global-hover-color) !important;
     text-decoration: underline;
   }
 
