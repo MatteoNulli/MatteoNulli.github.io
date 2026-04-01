@@ -1,7 +1,7 @@
 ---
 layout: page
 title: more
-permalink: /projects/
+permalink: /more/
 description: Some <b>more</b> things I do 📚 📷 
 # nav: true
 nav_order: 4

@@ -9,5 +9,8 @@ children:
     permalink: /news/
   - title: divider
   - title: more
-    permalink: /projects/
+    permalink: /more/
+  - title: divider
+  - title: contact
+    permalink: /#contact
 ---

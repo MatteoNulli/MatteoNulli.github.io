@@ -36,6 +36,17 @@ pagination:
     .post-links a {
       margin-right: 0.6rem;
       text-decoration: none;
+      color: var(--global-hover-color) !important;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .post-links a i,
+    .post-links a svg,
+    .post-links a svg * {
+      color: var(--global-hover-color) !important;
+      fill: currentColor !important;
+      stroke: currentColor !important;
     }
   </style>
 

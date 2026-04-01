@@ -66,6 +66,10 @@ layout: default
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
   }
 
+  .hero-socials a[href^="mailto:"] {
+    display: none !important;
+  }
+  
   .scroll-hint {
     text-align: center;
     margin: 0.5rem 0 2rem; /* re-balance after moving hero up */
@@ -75,6 +79,131 @@ layout: default
   #about {
     scroll-margin-top: 5rem;
   }
+
+  .contact-cta .btn.btn-primary {
+    background-color: var(--global-theme-color) !important;
+    border-color: var(--global-theme-color) !important;
+    color: #fff !important;
+  }
+
+  .contact-cta .btn.btn-primary:hover,
+  .contact-cta .btn.btn-primary:focus {
+    background-color: var(--global-hover-color) !important;
+    border-color: var(--global-hover-color) !important;
+    color: #fff !important;
+  }
+
+  .social .contact-icons a {
+    color: var(--global-theme-color) !important;
+  }
+
+  .social .contact-icons,
+  .social .contact-icons a:visited,
+  .social .contact-icons i,
+  .social .contact-icons i::before,
+  .social .contact-icons svg,
+  .social .contact-icons svg * {
+    color: var(--global-theme-color) !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  .social .contact-icons a:hover,
+  .social .contact-icons a:hover i,
+  .social .contact-icons a:hover i::before,
+  .social .contact-icons a:hover svg,
+  .social .contact-icons a:hover svg *,
+  .social .contact-icons a:focus,
+  .social .contact-icons a:focus i,
+  .social .contact-icons a:focus i::before,
+  .social .contact-icons a:focus svg,
+  .social .contact-icons a:focus svg * {
+    color: var(--global-hover-color) !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  .contact-section {
+    margin-top: 2rem;
+  }
+
+  .contact-section h2 {
+    margin-bottom: 1rem;
+  }
+
+  .contact-section .contact-cta {
+    margin-bottom: 1rem;
+  }
+
+  .contact-section .contact-cta p {
+    margin-bottom: 1rem;
+  }
+
+  .contact-section .contact-cta .btn.btn-primary {
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .contact-section .contact-icons {
+    margin-top: 0.5rem;
+  }
+  
+  .contact-cta .btn.btn-primary {
+    background-color: var(--global-theme-color) !important;
+    border-color: var(--global-theme-color) !important;
+    color: #fff !important;
+    border-radius: 999px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .contact-cta .btn.btn-primary:hover,
+  .contact-cta .btn.btn-primary:focus {
+    background-color: var(--global-hover-color) !important;
+    border-color: var(--global-hover-color) !important;
+    color: #fff !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.34);
+  }
+
+  .contact-section .contact-icons a[href^="mailto:"] {
+    display: none !important;
+  }
+
+
+  .section-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .section-heading-row h2 {
+    margin: 0;
+  }
+
+  .read-more-link {
+    margin-left: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--global-hover-color) !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .read-more-link span {
+    color: currentColor !important;
+  }
+
+  .read-more-link:hover,
+  .read-more-link:focus {
+    background: transparent;
+    color: var(--global-hover-color) !important;
+    text-decoration: underline;
+  }
+
 
   @media (max-width: 900px) {
     .hero { flex-direction: column-reverse; text-align: center; margin-top: -0.75rem; min-height: auto; }
@@ -130,9 +259,14 @@ layout: default
 
     <!-- Latest posts -->
     {% if site.latest_posts.enabled %}
-      <h2>
-        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest blogpost</a>
-      </h2>
+      <div class="section-heading-row">
+        <h2>
+          <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest blogpost</a>
+        </h2>
+        <a class="read-more-link" href="{{ '/blog/' | relative_url }}">
+          read more <span aria-hidden="true">→</span>
+        </a>
+      </div>
       {% include latest_posts.liquid %}
     {% endif %}
 
@@ -144,13 +278,25 @@ layout: default
       {% include selected_papers.liquid %}
     {% endif %}
 
-    <!-- Social -->
+    <!-- Contact -->
     {% if page.social %}
-      <div class="social">
-        <div class="contact-icons">{% include social.liquid %}</div>
+      <section id="contact" class="contact-section">
+        <h2>contact</h2>
 
-        <div class="contact-note">{{ site.contact_note }}</div>
-      </div>
+        <div class="social">
+          <div class="contact-cta mt-3">
+            <h3>Let&#39;s Work Together</h3>
+            <p>Whether you have a question, a project in mind, or just want to talk</p>
+            {% if site.email %}
+              <a class="btn btn-primary" href="mailto:{{ site.email }}">Say Hi</a>
+            {% endif %}
+          </div>
+
+          <div class="contact-icons">{% include social.liquid %}</div>
+
+          <div class="contact-note">{{ site.contact_note }}</div>
+        </div>
+      </section>
     {% endif %}
   </article>
 </div>
