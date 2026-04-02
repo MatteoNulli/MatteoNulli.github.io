@@ -51,6 +51,9 @@ social: true # includes social icons at the bottom of the page
 <div class="scroll-hint">
   <a href="#about">scroll ↓</a>
 </div>
+<div class="bored-link-row">
+  <a class="bored-link" href="https://chromedino.com/" target="_blank" rel="noopener noreferrer">or peak procrastination</a>
+</div>
 
 <section id="about" markdown="1">
 
