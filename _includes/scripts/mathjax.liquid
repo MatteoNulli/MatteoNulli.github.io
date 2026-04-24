@@ -4,6 +4,8 @@
     <script type="text/javascript">
       window.MathJax = {
         tex: {
+          inlineMath: [['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
           tags: 'ams',
         },
       };
@@ -12,9 +14,7 @@
       defer
       type="text/javascript"
       id="MathJax-script"
-      src="{{ site.third_party_libraries.mathjax.url.js }}"
-      integrity="{{ site.third_party_libraries.mathjax.integrity.js }}"
-      crossorigin="anonymous"
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
     ></script>
     <script
       defer
