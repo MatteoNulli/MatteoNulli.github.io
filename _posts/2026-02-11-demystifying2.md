@@ -8,7 +8,7 @@ tags: Multimodal-Learning Inference-Optimization
 thumbnail: https://cdn-uploads.huggingface.co/production/uploads/661d4e74b8f13412f6d48a50/SfOleyYtgr6UtQ4lT8jv7.png
 
 community_article_url: https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-impact-vt-laten
-blogpost_url: https://matteonulli.github.io/blog/2025/demystifying2/
+blogpost_url: https://matteonulli.github.io/blog/2026/demystifying2/
 math: true
 mermaid: true
 _styles: >
