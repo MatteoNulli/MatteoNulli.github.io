@@ -26,7 +26,7 @@ social: true # includes social icons at the bottom of the page
     <p class="hero-subtitle">Machine Learning Research & Engineering</p>
    <p class="hero-blurb">
       Currently at eBay — Foundation Models Team, building
-      <a href="https://arxiv.org/abs/2602.11733" class="text-primary">scalable</a>
+      <a href="https://arxiv.org/abs/2602.11733" class="text-primary">adaptable</a>
       multimodal models and
       <a href="https://arxiv.org/abs/2601.20408" class="text-primary">efficient</a>
       optimization pipelines for real-world applications. <br>
