@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Demystifying Multimodal Learning: Impact of Visual Tokens on Inference Latency"
-date: 2026-04-20 14:14:00
+date: 2026-04-24 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Inference-Optimization
 # thumbnail: assets/img/mllms_visual_tokens_wide.png
@@ -121,7 +121,8 @@ Image tokens, however, are significantly more difficult to optimize. In practice
 
 For a <abbr title="Click here for a refresh on Visual Token Production Strategies.">[Strategy B](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff#:~:text=Strategy%20B%3A%20The%20Multi%2DGrid%20/%20AnyRes)</abbr> model (like [LLaVA-OneVision-7B](https://huggingface.co/lmms-lab/llava-onevision-qwen2-7b-ov) (<a href="#llavonevision-2024">Li Bo, et al., 2024</a>))  using a \\( 3 \times 3 \\) grid, a single image might consume \\( \approx 2900 \\) tokens. Given that the model has a context window of 32k, using 3 or 5 images can consume 30-45% of your entire input capacity. Even worse, if you are serving a model with a 4k pre-defined context limit, due to memory issues, a single image blocks 70% of the total input. These scenarios leaves little room for few-shot examples or long conversation history, potentially degrading the model's ability to follow complex instructions.
 
-For this reason, it’s valuable to give users explicit control over how many tokens they are willing to allocate to visual inputs. One example of this approach is variable vision token limits in the <a href="//huggingface.co/google/gemma-4-31B-it#5-variable-image-resolution">Gemma 4</a> (<a href="#gemma4-2026">Farabet Clement, et al., 2026</a>) model family, which allows dynamic trade-offs between image fidelity and token usage.
+For this reason, it’s valuable to give users explicit control over how many tokens they are willing to allocate to visual inputs. One example of this approach is <a href="//huggingface.co/google/gemma-4-31B-it#5-variable-image-resolution">variable vision token limits</a> in the <a href="//huggingface.co/google/gemma-4-31B-it">Gemma 4</a> (<a href="#gemma4-2026">Farabet Clement, et al., 2026</a>) model family, which allows dynamic trade-offs between image fidelity and token usage.
+
 
 
 ## The Cascading Impact on VRAM

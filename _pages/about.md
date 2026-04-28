@@ -61,7 +61,7 @@ social: true # includes social icons at the bottom of the page
 
 
 👋 Hi, I am Matteo, an Applied ML Researcher at eBay with the Foundation Models Team.
-My work focuses on research in multimodal learning, inference optimisation and multimodal search reasoning with [Dr. Shahram Khadivi](https://www.linkedin.com/in/khadivi/).
+My work focuses on research and engineering in multimodal learning, inference optimisation and multimodal search reasoning with [Dr. Shahram Khadivi](https://www.linkedin.com/in/khadivi/).
 
 💭 My current research interests lie in Efficient Multimodal Modeling. In the recent past, I focused on visual representation learning ([here](https://openreview.net/forum?id=yvY1T3hHEQ)), adaptable VLM Architectures ([here](https://aclanthology.org/2026.eacl-industry.38.pdf)) and inference optimisation pipelines ([here](https://arxiv.org/pdf/2601.20408)).
 
