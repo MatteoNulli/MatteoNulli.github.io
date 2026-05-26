@@ -80,10 +80,6 @@
   <!-- Schema.org -->
   {% comment %} Social links generator for "sameAs schema" {% endcomment %}
   {% assign sameaslinks = '' | split: ',' %}
-  {% if site.orcid_id %}
-    {% capture link %}https://orcid.org/{{ site.orcid_id }}{% endcapture %}
-    {% assign sameaslinks = sameaslinks | push: link %}
-  {% endif %}
   {% if site.scholar_userid %}
     {% capture link %}https://scholar.google.com/citations?user={{ site.scholar_userid }}{% endcapture %}
     {% assign sameaslinks = sameaslinks | push: link %}
@@ -174,6 +170,10 @@
   {% endif %}
   {% if site.dblp_url %}
     {% capture link %}{{ site.dblp_url }}{% endcapture %}
+    {% assign sameaslinks = sameaslinks | push: link %}
+  {% endif %}
+  {% if site.orcid_id %}
+    {% capture link %}https://orcid.org/{{ site.orcid_id }}{% endcapture %}
     {% assign sameaslinks = sameaslinks | push: link %}
   {% endif %}
   {% if site.stackoverflow_id %}
