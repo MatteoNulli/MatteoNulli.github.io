@@ -53,9 +53,24 @@ layout: default
     margin-bottom: 1rem;
   }
 
-  .hero-socials { margin-top: 1rem; }
+  .hero-socials {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
   .hero-socials a {
     font-size: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 1;
+  }
+  .hero-socials a i {
+    vertical-align: middle;
+    line-height: 1;
   }
 
   .hero-img {
