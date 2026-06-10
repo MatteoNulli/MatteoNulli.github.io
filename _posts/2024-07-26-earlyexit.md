@@ -16,10 +16,8 @@ code_url: https://github.com/joanvelja/Confidently_Exiting/blob/main/
 
 ##### K.A. Abdel Sadek *, **M. Nulli** *, J. Velja *, J. Vincenti *, G. Desimini
 ###### University of Amsterdam, UvA-Bosch Delta Lab, Krueger AI Safety Lab (KASL)
-###### <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Uva%C2%AEmerken_ENG.png" alt="University of Amsterdam" height="24"/> &nbsp;  <img src="https://ivi.fnwi.uva.nl/uvaboschdeltalab/images/logo.png" alt="UvA-Bosch Delta Lab" height="24"/>&nbsp; <img src="https://www.kasl.ai/wp-content/uploads/2023/10/kasl-main-1.png" alt="KASL" height="24"/>&nbsp;
-<!-- ###### 📄 [Paper](https://arxiv.org/abs/2410.18952) | 📝 [Blogpost](https://matteonulli.github.io/blog/2024/earlyexit/) | 🧑‍💻 [Code](https://github.com/joanvelja/Confidently_Exiting/blob/main/) -->
-
-###### <a href="https://arxiv.org/abs/2410.18952" title="Paper"><i class="fa-regular fa-file" style="font-size: 1.75em;"></i></a> <a href="https://matteonulli.github.io/blog/2024/earlyexit/" title="Blogpost"><i class="fa-regular fa-newspaper" style="font-size: 1.75em;"></i></a> <a href="https://github.com/joanvelja/Confidently_Exiting/blob/main/" title="Code"><i class="fa-brands fa-github" style="font-size: 1.75em;"></i></a>
+###### <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Amsterdamuniversitylogo.svg" alt="University of Amsterdam" height="24"/> &nbsp;  <img src="https://ivi.fnwi.uva.nl/uvaboschdeltalab/images/logo.png" alt="UvA-Bosch Delta Lab" height="24"/>&nbsp; <img src="https://pbs.twimg.com/profile_images/1777776361194553344/nhpENrFn_400x400.jpg" alt="KASL" height="24"/>&nbsp;
+<p style="margin-bottom: 0.5rem; margin-left: -0.35em;"><a href="https://arxiv.org/abs/2410.18952" title="Paper"><i class="fa-regular fa-file" style="font-size: 1.75em;"></i></a> <a href="https://matteonulli.github.io/blog/2024/earlyexit/" title="Blogpost"><i class="fa-regular fa-newspaper" style="font-size: 1.75em;"></i></a> <a href="https://github.com/joanvelja/Confidently_Exiting/blob/main/" title="Code"><i class="fa-brands fa-github" style="font-size: 1.75em;"></i></a></p>
 
 ###### *Accepted to NeurIPS, Efficient Natural Language and Speech Processing*
 ###### *Equal Contribution
