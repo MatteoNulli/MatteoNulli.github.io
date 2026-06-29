@@ -58,6 +58,17 @@
     font-size: 0.9rem;
     margin-top: 0.15rem;
   }
+
+  .latest-post-thumb-cell {
+    width: 350px;
+    vertical-align: top;
+  }
+
+  @media (max-width: 576px) {
+    .latest-post-thumb-cell {
+      width: 40%;
+    }
+  }
 </style>
 
 <div class="news">
@@ -81,7 +92,7 @@
           {% assign post_image = item.image | default: item.thumbnail | default: '/assets/img/default-post.jpg' %}
           {% assign post_desc = item.description | default: item.excerpt | strip_html | strip %}
           <tr>
-            <td style="width: 350px; vertical-align: top;">
+            <td class="latest-post-thumb-cell">
               <a class="latest-post-thumb-wrap" href="{{ item.url | relative_url }}">
                 {% if post_image contains '://' %}
                   <img src="{{ post_image }}" alt="{{ item.title }}" class="latest-post-thumb">

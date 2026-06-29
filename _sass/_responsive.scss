@@ -1,0 +1,43 @@
+// Mobile / small-screen overrides
+// -------------------------------------------------------------
+// Desktop is intentionally left untouched. Everything here is
+// scoped to small screens via media queries (or uses globally
+// harmless safety nets) so wide layouts render identically.
+
+// Global safety nets (harmless on desktop): keep wide content
+// from forcing horizontal page scroll on phones.
+img,
+table,
+pre {
+  max-width: 100%;
+}
+
+pre {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  // Project masonry cards: single column instead of fixed 250px.
+  .grid-sizer,
+  .grid-item {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  // Blog page title: shrink only on narrow screens.
+  .header-bar h1 {
+    font-size: clamp(2.5rem, 12vw, 5rem);
+  }
+
+  // Bottom social icons: smaller so they don't overflow.
+  .social .contact-icons {
+    font-size: 2.5rem;
+  }
+
+  // CV date column: let it flow instead of a fixed, shifted 75px.
+  .date-column {
+    width: auto;
+    transform: none;
+  }
+}

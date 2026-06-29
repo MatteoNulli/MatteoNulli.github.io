@@ -260,6 +260,14 @@ layout: default
     .hero { flex-direction: column-reverse; text-align: center; margin-top: -0.75rem; min-height: auto; }
     .hero-right { justify-content: center; }
     .hero-actions { justify-content: center; }
+    .hero-socials { flex-wrap: wrap; justify-content: center; }
+    /* Reset the desktop offset that pushed this link off-screen on phones */
+    .bored-link { transform: none; }
+    .bored-link-row { margin-top: 0; }
+  }
+
+  @media (max-width: 576px) {
+    .hero-socials a { font-size: 2rem; width: 2rem; height: 2rem; }
   }
 </style>
   <header class="post-header">
