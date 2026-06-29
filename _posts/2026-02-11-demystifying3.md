@@ -1,5 +1,7 @@
 ---
 layout: post
+toc:
+  sidebar: left
 title: "Demystifying Multimodal Learning: Speculative Decoding in Multimodal Architectures"
 date: 2026-07-25 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
@@ -112,7 +114,7 @@ Video LLMs make everything worse, because the token counts are larger by another
 <!-- PLACEHOLDER IMAGE — upload the "Vision-Text Attention & Positional Distribution" heatmap (presentation slide 18) to your HF CDN and replace the src. -->
 <a id="figure-3"></a>
 <figure style="width: 75%; margin: auto; text-align: center;">
-  <img src="REPLACE_WITH_HF_CDN_URL"
+  <img src="/assets/img/attn_guidance_spec.png"
        alt="Positional bias of target attention over video tokens"
        style="width: 100%;">
   <figcaption style="margin-top: 10px; font-style: italic; color: #555;">
@@ -122,7 +124,7 @@ Video LLMs make everything worse, because the token counts are larger by another
 
 With the disease diagnosed, the cure is now clear. We need drafts that carry *less* visual weight, that stay *aligned* with the target despite carrying less, and, for video, that stop wasting hardware on sequential scheduling. The next two sections are two concrete answers to exactly these problems.
 
-## Approach 1: SpecVLM — Compress the Vision, Distill the Draft
+## SpecVLM — Compress the Vision, Distill the Draft
 
 SpecVLM ([Huang et al., 2025](#specvlm-2025)) tackles the *image* setting head-on. It starts from the strong EagleVLM baseline above and adds two ingredients: an **elastic visual compressor** to shrink the draft's visual burden, and an **online-logit distillation** protocol to keep the slimmed-down draft aligned with the target.
 
@@ -187,7 +189,7 @@ This eliminates the offline corpus entirely while staying compute-efficient. It 
 
 Stacking compression and online distillation on top of EagleVLM consistently improves both \\( \tau \\) and \\( \sigma \\). On the LLaVA family, SpecVLM lifts the per-benchmark speedup above the EagleVLM baseline (e.g. from 2.09× to 2.20× on LLaVA-1.5-7B, and from 2.29× to 2.38× on LLaVA-1.6-13B at temperature 0), and the paper reports reaching **2.5–2.9× end-to-end speedups within 5 training epochs** across LLaVA and MMMU, all while remaining strictly lossless. The single-image latency breakdown is striking: a 306 ms autoregressive pass for LLaVA-1.6-7B drops to 65 ms with EagleVLM and to **46 ms** with SpecVLM.
 
-## Approach 2: ParallelVLM — Aligning and Parallelizing for Video
+## ParallelVLM — Aligning and Parallelizing for Video
 
 SpecVLM compresses *what* the draft sees. ParallelVLM ([Kong et al., 2026](#parallelvlm-2026)) goes after the harder video setting by fixing *which* tokens to keep and *when* the models run. It contributes two ideas: an unbiased way to prune, and a parallel pipeline that stops wasting idle hardware.
 

@@ -1,5 +1,7 @@
 ---
 layout: post
+toc:
+  sidebar: left
 title: "Optimizing Predictions: Vocabulary Reduction and Contrastive Decoding in LLMs"
 date: 2024-11-26 09:10:45
 description: Efficiency-focused early exiting, vocabulary pruning, and contrastive decoding for LLM inference

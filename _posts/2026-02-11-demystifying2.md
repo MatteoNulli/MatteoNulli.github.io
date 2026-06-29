@@ -1,5 +1,7 @@
 ---
 layout: post
+toc:
+  sidebar: left
 title: "Demystifying Multimodal Learning: Impact of Visual Tokens on Inference Latency"
 date: 2026-04-24 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning

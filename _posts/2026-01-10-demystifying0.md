@@ -1,5 +1,7 @@
 ---
 layout: post
+toc:
+  sidebar: left
 title: "Demystifying Multimodal Learning: Enabling Vision in Language Models"
 date: 2026-02-17 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
