@@ -827,6 +827,13 @@ figure.highlight {
   margin: 0 0 1rem;
 }
 
+// Small breathing room between post figures and the text that follows.
+// Posts set an inline `margin: auto` on <figure>, so !important is needed
+// to override just the bottom margin.
+.post-content figure:not(.highlight) {
+  margin-bottom: 1.5rem !important;
+}
+
 pre {
   color: var(--global-theme-color);
   background-color: var(--global-code-bg-color);
