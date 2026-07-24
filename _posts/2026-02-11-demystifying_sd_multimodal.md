@@ -3,7 +3,7 @@ layout: post
 toc:
   sidebar: left
 title: "Demystifying Multimodal Learning: Speculative Decoding in Multimodal Architectures"
-date: 2026-07-25 14:14:00
+date: 2026-08-25 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Inference-Optimization
 # thumbnail: assets/img/TODO-speculative-decoding-thumbnail.png
@@ -146,12 +146,7 @@ SpecVLM ([Huang et al., 2025](#specvlm-2025)) tackles the *image* setting head-o
 
 #### Elastic visual compression
 
-If the draft's problem is too many visual tokens, the obvious move is to compress them before they ever reach the draft. The catch is that the *right* compressor depends on the input: a dense OCR image and a simple scene have very different compression sweet spots. SpecVLM therefore does not commit to a single operator. It assembles a toolbox of four complementary visual compressors and chooses among them:
-
-- **Pruning** — drop redundant tokens (random or structured).
-- **Pooling** — spatially downsample groups of tokens into one.
-- **Convolution** — learn a compact spatial summary.
-- **Resampler** — a Q-Former-style cross-attention module ([Li et al., 2023](#blip2-2023)) that distills many tokens into a few learned queries.
+If the draft's problem is too many visual tokens, the obvious move is to compress them before they ever reach the draft. The catch is that the *right* compressor depends on the input: a dense OCR image and a simple scene have very different compression sweet spots. SpecVLM therefore does not commit to a single operator. It assembles a toolbox of four complementary visual compressors and chooses among them, see <a href="#figure-5">Figure 5</a>.
 
 <a id="figure-5"></a>
 <figure style="width: 85%; margin: auto; text-align: center;">
@@ -354,8 +349,6 @@ If you use this work, please cite:
 <a id="vispec-2025" class="bib-item"> Kang, Jialiang, Han Shu, Wenshuo Li, Yingjie Zhai, and Xinghao Chen. "ViSpec: Accelerating vision-language models with vision-aware speculative decoding." arXiv preprint arXiv:2509.15235 (2025). </a>
 
 <a id="specvla-2025" class="bib-item"> Wang, Songsheng, Rucheng Yu, Zhihang Yuan, Chao Yu, Feng Gao, Yu Wang, and Derek F. Wong. "Spec-VLA: Speculative decoding for vision-language-action models with relaxed acceptance." Conference on Empirical Methods in Natural Language Processing (EMNLP), 2025. arXiv preprint arXiv:2507.22424. </a>
-
-<a id="blip2-2023" class="bib-item"> Li, Junnan, Dongxu Li, Silvio Savarese, and Steven Hoi. "BLIP-2: Bootstrapping language-image pre-training with frozen image encoders and large language models." International Conference on Machine Learning (ICML), 2023. arXiv preprint arXiv:2301.12597. </a>
 
 <a id="fastv-2024" class="bib-item"> Chen, Liang, Haozhe Zhao, Tianyu Liu, Shuai Bai, Junyang Lin, Chang Zhou, and Baobao Chang. "An image is worth 1/2 tokens after layer 2: Plug-and-play inference acceleration for large vision-language models." European Conference on Computer Vision (ECCV), 2024. arXiv preprint arXiv:2403.06764. </a>
 
