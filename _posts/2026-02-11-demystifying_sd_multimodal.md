@@ -3,7 +3,7 @@ layout: post
 toc:
   sidebar: left
 title: "Demystifying Multimodal Learning: Speculative Decoding in Multimodal Architectures"
-date: 2026-08-25 14:14:00
+date: 2026-12-25 14:14:00
 description: A blogpost series on the nuts and bolts of Multimodal Learning
 tags: Multimodal-Learning Inference-Optimization
 # thumbnail: assets/img/TODO-speculative-decoding-thumbnail.png
@@ -39,7 +39,7 @@ So far, every lever we pulled was about *spending fewer tokens*. But there is an
 
 The text-only world answered this years ago with **Speculative Decoding (SD)** ([Leviathan et al., 2023](#specdec-2023), [Chen et al., 2023](#specsample-2023)): a *lossless* trick that routinely doubles LLM throughput. The natural follow-up is whether this free lunch survives the jump to images and video. As we will see, the answer is a qualified *yes*, the naive recipe already works, but the visual tokens we have spent three blogposts worrying about come back to haunt us, and squeezing out the full speedup requires rethinking SD with vision in mind.
 
-In this installment we will first recap [how Speculative Decoding works](#speculative-decoding-in-a-nutshell), then ask [whether it applies natively to VLMs](#can-we-apply-speculative-decoding-natively-to-vlms) and what breaks, and finally walk through representative approaches that fix it, [SpecVLM](#specvlm-image) for images and a same-named [SpecVLM](#specvlm-video) for video, before zooming out to [the broader landscape](#the-broader-landscape) of multimodal SD.
+In this installment we will first recap [how Speculative Decoding works](#speculative-decoding-in-a-nutshell), then ask [whether it applies natively to VLMs](#can-we-apply-speculative-decoding-natively-to-vlms) and what breaks, and finally walk through the fixes [issue by issue](#fixing-issue-by-issue), from compressing the draft's visual load to keeping it aligned, de-biasing its pruning, and parallelizing its schedule, across the fast-growing landscape of multimodal SD.
 
 ## Speculative Decoding in a Nutshell
 
@@ -112,12 +112,20 @@ The trouble starts when we ask *why it isn't even faster*, and here the visual t
 
 #### The image problem
 
-Two coupled issues hold naive SD back on VLMs ([Huang et al., 2025](#specvlm-2025)):
+Several issues hold naive SD back on VLMs. Two coupled ones form the core ([Huang et al., 2025](#specvlm-2025)):
 
 1. **Visual tokens inflate the KV Cache.** Multi-image and high-resolution inputs dump thousands of visual tokens into the cache during prefill (recall the [AnyRes / multi-grid blowup](https://huggingface.co/blog/MatteoNulli/de-mystifying-multimodal-learning-hidden-ineff#:~:text=Strategy%20B%3A%20The%20Multi%2DGrid%20/%20AnyRes)). The draft model inherits this burden: it must carry the same enormous visual context, which makes the "cheap" draft far less cheap.
 2. **A fat KV Cache means slow attention.** A larger cache raises per-step latency, particularly in the attention layers and the memory traffic moving keys and values around. Every extra visual token the draft drags along directly erodes the speed advantage it is supposed to provide.
 
 The takeaway is that, in the multimodal setting, the draft's *visual* workload, not its language modeling, becomes the bottleneck. This is the single observation that motivates **vision token compression** as the central design lever for multimodal SD.
+
+<!-- CLAUDE: draft bullets below surface problems raised in the referenced papers that were not previously named in this section. Review, edit, or delete. -->
+But volume is not the only issue the literature raises. A few more problems compound it:
+
+3. **[draft — review]** *Text and visual tokens are fundamentally different.* <!-- CLAUDE: from MSD (Lin et al., 2025) --> Pushing both through a single, undifferentiated draft pathway is suboptimal, the draft needs *both* strong language modeling and genuine visual perception, and training naively on multimodal data can erode one while trying to build the other ([Lin et al., 2025](#msd-2025)).
+4. **[draft — review]** *Visual grounding decays over long generations.* <!-- CLAUDE: from ViSpec (Kang et al., 2025) --> A large VLM filters redundant image information layer by layer, but a small draft struggles to, so the further it generates, the more it drifts from the image and the shorter the accepted length becomes ([Kang et al., 2025](#vispec-2025)).
+5. **[draft — review]** *Keeping a compressed draft aligned is expensive.* <!-- CLAUDE: from SpecVLM-image (Huang et al., 2025) --> The usual alignment fix, offline distillation, requires building and storing a teacher-logit corpus at multimodal scale, which is cumbersome and storage-heavy ([Huang et al., 2025](#specvlm-2025)).
+6. **[draft — review]** *Training data is scarce.* <!-- CLAUDE: from ViSpec (Kang et al., 2025) --> There are few multimodal datasets with long assistant responses, exactly the regime a draft must be trained on to stay grounded over long outputs ([Kang et al., 2025](#vispec-2025)).
 
 #### The video problem
 
@@ -137,16 +145,22 @@ Video LLMs make everything worse, because the token counts are larger by another
   </figcaption>
 </figure>
 
-In the next two sections we'll dive deeper into two concrete answers to exactly these problems. 
-**Naming warning:** Both covered works are called SpecVLM ([Huang et al., 2025](#specvlm-2025), [Ji et al., 2025](#specvlm-video-2025)), and while they came out concurrently, they address the issue starting from two different points, images and videos. We'll therefore go over both of them and dissect their approaches. 
+<!-- CLAUDE: draft bridge bullet, surfaces the action-modality problem raised by Spec-VLA (Wang et al., 2025). Review, edit, or delete. -->
+**[draft — review]** And a fourth problem appears once we leave perception for *action*. <!-- CLAUDE: from Spec-VLA (Wang et al., 2025) --> Vision-Language-Action models emit structured, continuous-valued action tokens, and SD's strict *exact-match* acceptance criterion collapses the accepted length on them, applying a standard SD framework directly barely moves the needle ([Wang et al., 2025](#specvla-2025)). The rigidity of the acceptance rule, not the token count, is what breaks here.
 
-## SpecVLM (Image) — Compress the Vision, Distill the Draft {#specvlm-image}
+In the section below we walk through the concrete answers the field has proposed, organized by the problem each one attacks rather than paper by paper.
 
-SpecVLM ([Huang et al., 2025](#specvlm-2025)) tackles the *image* setting head-on. It starts from the strong EagleVLM baseline above and adds two ingredients: an **elastic visual compressor** to shrink the draft's visual burden, and an **online-logit distillation** protocol to keep the slimmed-down draft aligned with the target.
+## Fixing Multimodal Speculative Decoding, Issue by Issue {#fixing-issue-by-issue}
 
-#### Elastic visual compression
+Every problem above has by now attracted at least one answer. Rather than march through the literature paper by paper, this section is organized around the *issues*: for each one, we look at how one or more works attack it. The recurring recipe underneath all of them is the same, *lighten the draft's visual load, keep it aligned with the target, and never break losslessness*, but the specific lever differs from problem to problem. A single paper can therefore show up in more than one place.
 
-If the draft's problem is too many visual tokens, the obvious move is to compress them before they ever reach the draft. The catch is that the *right* compressor depends on the input: a dense OCR image and a simple scene have very different compression sweet spots. SpecVLM therefore does not commit to a single operator. It assembles a toolbox of four complementary visual compressors and chooses among them, see <a href="#figure-5">Figure 5</a>.
+**Naming warning:** two of the works below are both called **SpecVLM** ([Huang et al., 2025](#specvlm-2025), [Ji et al., 2025](#specvlm-video-2025)). They came out concurrently from different groups and attack the problem from different ends, images and video. We disambiguate by modality throughout.
+
+### Shrinking the draft's visual load {#specvlm-image}
+
+*The core issue: the draft inherits thousands of visual tokens, which bloat its KV Cache and slow its attention.* The obvious move is to compress those tokens before they ever reach the draft, and three works do exactly that, each differently.
+
+**SpecVLM (image)** ([Huang et al., 2025](#specvlm-2025)) refuses to commit to a single compressor, because the *right* one depends on the input: a dense OCR image and a simple scene have very different compression sweet spots. It assembles a toolbox of four complementary visual compressors, pruning, pooling, convolution and resampler primitives, and combines them into a single **elastic** compressor that adaptively selects how aggressively to compress per input, navigating the FLOPs/parameters-versus-accuracy frontier on the fly (<a href="#figure-5">Figure 5</a>).
 
 <a id="figure-5"></a>
 <figure style="width: 85%; margin: auto; text-align: center;">
@@ -158,14 +172,36 @@ If the draft's problem is too many visual tokens, the obvious move is to compres
   </figcaption>
 </figure>
 
-The word *elastic* is the key. Rather than hard-wiring one strategy, the compressor adaptively selects how aggressively to compress per input, navigating the FLOPs/parameters-versus-accuracy frontier on the fly. 
-
 <u>Upside</u>: **the draft carries a fraction of the visual tokens, so each draft step gets genuinely cheaper**.<br>
-<u>Downside</u>: a more aggressively compressed draft sees less, and risks drifting from the target, which is exactly what the next ingredient repairs.
+<u>Downside</u>: a more aggressively compressed draft sees less, and risks drifting from the target, which is exactly what [keeping the draft aligned](#keeping-the-slimmed-draft-aligned) has to repair.
 
-#### Online-logit distillation
+**SpecVLM (video)** ([Ji et al., 2025](#specvlm-video-2025)) attacks the same load in the far worse video regime, where a handful of frames balloons into thousands of tokens. Its starting point is a surprising empirical finding: **the draft's speculation is remarkably insensitive to how aggressively you prune the video tokens it sees**, you can throw away up to **90%** of them and the mean accepted length \\( \sigma \\) barely budges. Better still, it is **training-free**, no distillation and no fine-tuning, it works at inference time on off-the-shelf draft/target pairs. The pruning is two-stage:
 
-A compressed draft is only useful if it still *agrees* with the target, otherwise acceptance length \\( \sigma \\) collapses and the speedup evaporates. The usual fix is offline distillation, but building a teacher-logit corpus at multimodal scale is cumbersome and storage-heavy. SpecVLM instead distills **online**, generating the teacher's supervision on the fly during training.
+- **Stage I, verifier-guided selection.** The target model, the "verifier" that already runs every round, exposes attention signals that flag which video tokens are genuinely informative; SpecVLM keeps those.
+- **Stage II, spatially-uniform pruning.** Among the survivors, the remaining redundancy is trimmed uniformly across space, so coverage stays even across the frame instead of clustering. (This second stage is also what counters [attention's positional bias](#de-biasing-attention-guided-pruning).)
+
+The draft then speculates over this heavily-pruned set while the target still verifies against the full sequence, so losslessness is never in question.
+
+<!-- PLACEHOLDER IMAGE — upload the SpecVLM (Ji et al., 2025) Figure 1 (draft latency breakdown + accept length vs Std.-SD) to your HF CDN and replace the src. -->
+<a id="figure-7"></a>
+<figure style="width: 85%; margin: auto; text-align: center;">
+  <img src="REPLACE_WITH_HF_CDN_URL"
+       alt="SpecVLM draft latency breakdown and average accept length versus standard SD"
+       style="width: 100%;">
+  <figcaption style="margin-top: 10px; font-style: italic; color: #555;">
+    Figure 7: <b>SpecVLM's draft cost and accept length.</b> (a) Draft latency breakdown for LLaVA-OneVision-7B, decoding time averaged over 100 tokens on a single NVIDIA A100. (b) Average accept length compared with standard SD (Std.-SD). Figure adapted from <a href="#specvlm-video-2025">Ji et al., 2025</a>.
+  </figcaption>
+</figure>
+
+The two panels of [Figure 7](#figure-7) tell the story: aggressively pruning the draft's video tokens slashes its per-token latency (a), while \\( \sigma \\) holds up against standard SD (b), cheaper draft steps with no loss in how much the target accepts. Averaged across four video understanding benchmarks this compounds into up to **2.68×** decoding speedup on LLaVA-OneVision-72B and **2.11×** on Qwen2.5-VL-32B, all strictly lossless.
+
+**ViSpec** ([Kang et al., 2025](#vispec-2025)) compresses at the architecture level instead, adding a lightweight Q-Former-style vision adaptor that shrinks the image tokens the draft has to carry (its second, complementary idea, persistent grounding, is covered [below](#preserving-visual-grounding-over-long-generations)).
+
+### Keeping the slimmed draft aligned {#keeping-the-slimmed-draft-aligned}
+
+*The core issue: a compressed draft sees less, so it risks drifting from the target, and if acceptance length \\( \sigma \\) collapses the speedup evaporates.* The usual fix, offline distillation, means building and storing a teacher-logit corpus at multimodal scale, which is cumbersome and storage-heavy.
+
+**SpecVLM (image)** ([Huang et al., 2025](#specvlm-2025)) sidesteps that corpus by distilling **online**, generating the teacher's supervision on the fly during training.
 
 <!-- :
 
@@ -175,7 +211,7 @@ A compressed draft is only useful if it still *agrees* with the target, otherwis
 
 $$ \mathcal{L}_{\text{online}} = \lambda_{\text{logit}}\, \mathcal{L}_{\text{CE}}(\mathbf{z}_q, \mathbf{z}_p) + \lambda_{\text{feat}}\, \mathcal{L}_{\text{SmoothL1}}(\mathbf{f}_q, \mathbf{f}_p) $$ -->
 
-This eliminates the offline corpus entirely while staying compute-efficient. It also surfaces a neat empirical phenomenon, a **training-time scaling effect**: with the data and draft architecture fixed, *longer* online training monotonically *increases* the draft's mean accepted length \\( \sigma \\), and hence the speedup. Better-aligned drafts are, quite literally, a matter of training them longer.
+This eliminates the offline corpus entirely while staying compute-efficient. It also surfaces a neat empirical phenomenon, a **training-time scaling effect**: with the data and draft architecture fixed, *longer* online training monotonically *increases* \\( \sigma \\), and hence the speedup. Better-aligned drafts are, quite literally, a matter of training them longer.
 
 <a id="figure-6"></a>
 <figure style="width: 85%; margin: auto; text-align: center;">
@@ -189,42 +225,39 @@ This eliminates the offline corpus entirely while staying compute-efficient. It 
 
 Stacking compression and online distillation on top of EagleVLM edges the latency improvement past the baseline on every LLaVA model ([Figure 6b](#figure-6)): 2.09× → 2.20× on v1.5-7B, up to 2.31× → **2.41×** on v1.5-13B. The latency story is the more striking one ([Figure 6a](#figure-6)): the 306 ms autoregressive pass for LLaVA-1.6-7B collapses to **46 ms**, with the once-dominant 261 ms prefill all but gone, and all of it stays strictly lossless.
 
-## SpecVLM (Video) — Verifier-Guided Token Pruning {#specvlm-video}
+### Handling text and visual tokens differently {#handling-text-and-visual-tokens-differently}
 
-The image-focused SpecVLM we just met has a namesake: a *different*, video-focused **SpecVLM** ([Ji et al., 2025](#specvlm-video-2025)) from a separate group. (Two papers called "SpecVLM", we disambiguate by modality throughout.) This one targets Video LLMs, where the token bloat we have spent this series worrying about is at its worst: a handful of frames balloons into thousands of visual tokens.
+*The core issue: text and visual tokens are fundamentally different, so forcing both through one undifferentiated draft pathway is suboptimal.*
 
-Its starting point is a surprising empirical finding: **the draft's speculation is remarkably insensitive to how aggressively you prune the video tokens it sees.** You can throw away up to **90%** of them and the mean accepted length \\( \sigma \\) barely budges. Better still, SpecVLM is **training-free**, no distillation and no fine-tuning, it works at inference time on off-the-shelf draft/target pairs.
+**MSD — Multimodal Speculative Decoding** ([Lin et al., 2025](#msd-2025)) argues the draft should process the two token types *separately*, and trains it in two stages to build both capabilities without one eroding the other: text-only instruction tuning first, then a gradual curriculum of multimodal data. It reaches up to 2.29×/2.46× on LLaVA-1.5 7B/13B.
 
-#### Two-stage verifier-guided pruning
+### Preserving visual grounding over long generations {#preserving-visual-grounding-over-long-generations}
 
-- **Stage I, verifier-guided selection.** The target model, the "verifier" that already runs every round, exposes attention signals that flag which video tokens are genuinely informative; SpecVLM keeps those.
-- **Stage II, spatially-uniform pruning.** Among the survivors, the remaining redundancy is trimmed uniformly across space, so coverage stays even across the frame instead of clustering.
+*The core issue: a small draft cannot filter visual redundancy layer by layer the way a large VLM does, so it loses touch with the image as the response grows longer.*
 
-The draft then speculates over this heavily-pruned set while the target still verifies against the full sequence, so losslessness is never in question.
+**ViSpec** ([Kang et al., 2025](#vispec-2025)) extracts a single *global* visual feature vector and injects it into every subsequent text token's hidden state, giving the draft persistent visual grounding over long generations. To train for exactly this regime it also builds synthetic long-response data, directly addressing the scarcity of multimodal datasets with long assistant responses. It reports up to **3.22×**, against ~1.6× for Medusa and ~2.1× for EAGLE-2 on the same models.
 
-#### Results
+### De-biasing attention-guided pruning {#de-biasing-attention-guided-pruning}
 
-<!-- PLACEHOLDER IMAGE — upload the SpecVLM (Ji et al., 2025) Figure 1 (draft latency breakdown + accept length vs Std.-SD) to your HF CDN and replace the src. -->
-<a id="figure-7"></a>
-<figure style="width: 85%; margin: auto; text-align: center;">
-  <img src="REPLACE_WITH_HF_CDN_URL"
-       alt="SpecVLM draft latency breakdown and average accept length versus standard SD"
-       style="width: 100%;">
-  <figcaption style="margin-top: 10px; font-style: italic; color: #555;">
-    Figure 7: <b>SpecVLM's draft cost and accept length.</b> (a) Draft latency breakdown for LLaVA-OneVision-7B, decoding time averaged over 100 tokens on a single NVIDIA A100. (b) Average accept length compared with standard SD (Std.-SD). Figure adapted from <a href="#specvlm-video-2025">Ji et al., 2025</a>.
-  </figcaption>
-</figure>
+*The core issue: choosing which tokens to keep by the target's raw attention is positionally biased, it keeps tokens for* where *they sit, not* what *they carry.*
 
-The two panels of [Figure 7](#figure-7) tell the story: aggressively pruning the draft's video tokens slashes its per-token latency (a), while the mean accepted length \\( \sigma \\) holds up against standard SD (b), cheaper draft steps with no loss in how much the target accepts. Averaged across four video understanding benchmarks this compounds into up to **2.68×** decoding speedup on LLaVA-OneVision-72B and **2.11×** on Qwen2.5-VL-32B, all strictly lossless. The paper has the full per-benchmark breakdown for anyone who wants to dig deeper.
+**SpecVLM (video)**'s Stage II ([Ji et al., 2025](#specvlm-video-2025)) is a first mitigation: after the attention-guided selection, it prunes the survivors *spatially uniformly*, so coverage does not clump.
 
-## The Broader Landscape
+**ParallelVLM** ([Kong et al., 2026](#parallelvlm-2026)) removes the biased signal entirely with **UV-Prune**: instead of trusting raw attention, it keeps the tokens whose vision-text alignment *grows* as they move deeper through the target's layers, an attention-free, unbiased criterion (also compatible with FlashAttention-style kernels). Against lossy pruning such as FastV ([Chen et al., 2024](#fastv-2024)), SparseVLM ([Zhang et al., 2024](#sparsevlm-2024)) and DyCoke ([Tao et al., 2024](#dycoke-2024)) it holds ~98–99% accuracy where those sit at ~83–91%.
 
-The two SpecVLMs are only a slice of a fast-growing space. The recurring theme across all of it is the same: *lighten the draft's visual load, keep it aligned with the target, and never break losslessness.* A few other directions worth knowing:
+### Breaking the sequential bottleneck {#breaking-the-sequential-bottleneck}
 
-- **ParallelVLM** ([Kong et al., 2026](#parallelvlm-2026)). Extends the video SpecVLM with two ideas. First, **UV-Prune**: rather than trusting the target's raw attention (which is positionally biased toward the start and end of the sequence), it keeps the tokens whose vision-text alignment *grows* as they move deeper through the target's layers. Second, a **parallel pipeline** that overlaps draft and target prefill, spends the leftover slack generating *startup tokens* before decoding begins, and widens the verification window by nearly 2×. Still lossless, it reaches up to **3.36×** on LLaVA-OV (7B & 72B), and against lossy pruning such as FastV ([Chen et al., 2024](#fastv-2024)), SparseVLM ([Zhang et al., 2024](#sparsevlm-2024)) and DyCoke ([Tao et al., 2024](#dycoke-2024)) it holds ~98–99% accuracy where those sit at ~83–91%.
-- **MSD — Multimodal Speculative Decoding** ([Lin et al., 2025](#msd-2025)). Argues that text and visual tokens are different enough that the draft should process them *separately*, and trains the draft in two stages, text-only instruction tuning first, then a gradual curriculum of multimodal data, reaching up to 2.29×/2.46× on LLaVA-1.5 7B/13B.
-- **ViSpec — Vision-Aware Speculative Decoding** ([Kang et al., 2025](#vispec-2025)). Adds a lightweight Q-Former-style vision adaptor to compress image tokens, then extracts a single *global* visual feature vector and injects it into every subsequent text token's hidden state, giving the draft persistent visual grounding over long generations. Combined with synthetic long-response training data, it reports up to **3.22×**, against ~1.6× for Medusa and ~2.1× for EAGLE-2 on the same models.
-- **Spec-VLA** ([Wang et al., 2025](#specvla-2025)). Pushes SD beyond perception into *action*: for Vision-Language-Action robotics models, it relaxes the acceptance criterion using the relative distances between action tokens, recovering a 1.42× speedup over OpenVLA where naive SD barely moves the needle.
+*The core issue: in vanilla SD the draft and target run one after the other, so on heavy video inputs the hardware sits idle for much of prefill and decode.*
+
+**ParallelVLM** ([Kong et al., 2026](#parallelvlm-2026)) reorganizes the schedule into a **parallel pipeline**: it overlaps draft and target prefill, spends the leftover slack generating *startup tokens* before decoding begins, and lets draft generation and target verification proceed in overlapping windows, widening the verification window by nearly 2×. Combined with UV-Prune above and still fully lossless, it reaches up to **3.36×** on LLaVA-OV (7B & 72B). <!-- CLAUDE: the paper's abstract (arXiv:2603.19610) headlines "up to 2.11×". Reconcile 3.36× against the paper body before publishing. -->
+
+### Relaxing acceptance for action tokens {#relaxing-acceptance-for-action-tokens}
+
+*The core issue: SD's strict exact-match acceptance criterion collapses the accepted length on structured, continuous-valued action tokens.*
+
+**Spec-VLA** ([Wang et al., 2025](#specvla-2025)) pushes SD beyond perception into *action*: for Vision-Language-Action robotics models, it relaxes the acceptance criterion using the relative distances between action tokens, recovering a 1.42× speedup over OpenVLA where naive SD barely moves the needle.
+
+### A snapshot of the landscape
 
 <div style="margin-top: 2rem; margin-bottom: 2rem; font-family: sans-serif; width: 100%;">
     <table style="margin-left: auto; margin-right: auto; border-collapse: collapse; border: 1px solid #dee2e6; box-shadow: 0 2px 5px rgba(0,0,0,0.05); min-width: 60%;">
